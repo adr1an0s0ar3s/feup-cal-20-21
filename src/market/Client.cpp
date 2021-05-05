@@ -1,19 +1,19 @@
 #include "Client.h"
 
-Client::Client(int id, const std::string &name, int addressId) {
-    this->id = id;
+Client::Client(int clientId, int nodeId, const std::string &name) {
+    this->clientId = clientId;
+    this->nodeId = nodeId;
     this->name = name;
-    this->addressId = addressId;
 }
 
-int Client::getId() const {
-    return this->id;
+int Client::getClientId() const {
+    return this->clientId;
+}
+
+int Client::getNodeId() const {
+    return this->nodeId;
 }
 
 const std::string &Client::getName() const {
     return this->name;
-}
-
-int Client::getAddressId() const {
-    return this->addressId;
 }

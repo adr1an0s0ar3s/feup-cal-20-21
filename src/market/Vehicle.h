@@ -7,8 +7,11 @@ private:
 
 public:
     explicit Vehicle(int capacity);
+
     int getCapacity() const;
+
     void setCapacity(int newCapacity);
+
     bool operator<(const Vehicle &v) const;
 };
 

@@ -4,15 +4,17 @@
 #include <string>
 class Client {
 private:
-    int id;
+    int clientId;
+    int nodeId;
+
     std::string name;
-    int addressId;
 
 public:
-    Client(int id, const std::string &name, int addressId);
-    int getId() const;
+    Client(int clientId, int nodeId, const std::string &name);
+
+    int getClientId() const;
+    int getNodeId() const;
     const std::string & getName() const;
-    int getAddressId() const;
 };
 
 #endif //MARKET_ON_WHEELS_CLIENT_H
