@@ -2,6 +2,7 @@
 #define MARKET_ON_WHEELS_VEHICLE_H
 
 class Vehicle {
+private:
     int capacity;
 
 public:
