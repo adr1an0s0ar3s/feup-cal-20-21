@@ -1,18 +1,21 @@
-//
-// Created by Francisco Cerqueira on 05/05/2021.
-//
-
 #include "Stock.h"
 
+Stock::Stock() {
+    this->inventory = std::map<int, int>();
+}
+
 int Stock::getQuantity(int productId) {
-    // TODO
-    return 0;
+    int quantity;
+    try {
+        quantity = this->inventory.at(productId);
+    }
+    catch (std::out_of_range &e){
+        return 0;
+    }
+    return quantity;
 }
 
 void Stock::setQuantity(int productId, int quantity) {
-    // TODO
-}
-
-void Stock::changeStock(int productId, int quantityVariation) {
-    // TODO
+    std::pair<std::map<int, int>::iterator , bool> result = this->inventory.insert(std::pair<int, int> (productId, quantity));
+    if (!result.second) result.first->second = quantity;
 }

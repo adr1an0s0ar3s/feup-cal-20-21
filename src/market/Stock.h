@@ -12,7 +12,6 @@ public:
 
     int getQuantity(int productId);
     void setQuantity(int productId, int quantity);
-    void changeStock(int productId, int quantityVariation);
 };
 
 #endif //MARKET_ON_WHEELS_STOCK_H
