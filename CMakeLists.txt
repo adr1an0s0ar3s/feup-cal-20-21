@@ -3,4 +3,4 @@ project(market_on_wheels)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(market_on_wheels main.cpp src/market/Vehicle.cpp src/market/Vehicle.h src/market/Client.cpp src/market/Client.h src/market/Supplier.cpp src/market/Supplier.h src/market/Stock.cpp src/market/Stock.h)
+add_executable(market_on_wheels main.cpp src/market/Vehicle.cpp src/market/Vehicle.h src/market/Client.cpp src/market/Client.h src/market/Supplier.cpp src/market/Supplier.h src/market/Stock.cpp src/market/Stock.h src/util/Time.cpp src/util/Time.h)
