@@ -4,7 +4,7 @@ Vehicle::Vehicle(int capacity) {
     this->capacity = capacity;
 }
 
-int Vehicle::getCapacity() const {
+double Vehicle::getCapacity() const {
     return this->capacity;
 }
 

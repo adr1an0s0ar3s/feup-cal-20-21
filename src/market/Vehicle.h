@@ -3,12 +3,12 @@
 
 class Vehicle {
 private:
-    int capacity;
+    double capacity;
 
 public:
     explicit Vehicle(int capacity);
 
-    int getCapacity() const;
+    double getCapacity() const;
 
     void setCapacity(int newCapacity);
 

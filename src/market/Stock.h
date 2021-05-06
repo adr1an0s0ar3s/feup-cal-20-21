@@ -11,6 +11,7 @@ public:
     Stock();
 
     int getQuantity(int productId);
+
     void setQuantity(int productId, int quantity);
 };
 
