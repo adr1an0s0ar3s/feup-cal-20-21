@@ -2,6 +2,7 @@
 #define MARKET_ON_WHEELS_CLIENT_H
 
 #include <string>
+
 class Client {
 private:
     int clientId;

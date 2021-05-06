@@ -10,6 +10,7 @@ private:
 
     Stock stock;
 
+public:
     Supplier(int supplierId, int nodeId);
 
     int getSupplierId() const;

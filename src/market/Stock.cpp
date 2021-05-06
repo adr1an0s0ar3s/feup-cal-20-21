@@ -4,7 +4,7 @@ Stock::Stock() {
     this->inventory = std::map<int, int>();
 }
 
-int Stock::getQuantity(int productId) {
+int Stock::getQuantity(int productId) const {
     int quantity;
     try {
         quantity = this->inventory.at(productId);

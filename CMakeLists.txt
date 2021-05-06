@@ -8,6 +8,8 @@ add_executable(market_on_wheels
 
         src/market/Client.cpp
         src/market/Client.h
+        src/market/Order.cpp
+        src/market/Order.h
         src/market/Product.cpp
         src/market/Product.h
         src/market/Stock.cpp

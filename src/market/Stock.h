@@ -10,7 +10,7 @@ private:
 public:
     Stock();
 
-    int getQuantity(int productId);
+    int getQuantity(int productId) const;
 
     void setQuantity(int productId, int quantity);
 };
