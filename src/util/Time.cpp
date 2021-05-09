@@ -66,8 +66,8 @@ std::string Time::toString() const {
 
 Time Time::operator+(const Time &t) {
     Time time;
-    time.setMinutes(this->minutes + t.getMinutes() % 60);
-    time.setHours(this->hours + t.getHours() % 24);
+    time.setMinutes((this->minutes + t.getMinutes()) % 60);
+    time.setHours((((this->minutes + t.getMinutes()) / 60) +  this->hours + t.getHours()) % 24);
     return time;
 }
 
