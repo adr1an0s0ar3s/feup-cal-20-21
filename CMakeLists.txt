@@ -20,4 +20,7 @@ add_executable(market_on_wheels
         src/market/Vehicle.h
 
         src/util/Time.cpp
-        src/util/Time.h)
+        src/util/Time.h
+
+        src/Application.cpp
+        src/Application.h)
