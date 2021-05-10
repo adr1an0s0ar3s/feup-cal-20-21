@@ -21,6 +21,8 @@ add_executable(market_on_wheels
 
         src/util/Time.cpp
         src/util/Time.h
+        src/util/Input.cpp
+        src/util/Input.h
 
         src/Application.cpp
         src/Application.h)
