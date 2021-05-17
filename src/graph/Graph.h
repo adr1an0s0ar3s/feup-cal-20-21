@@ -190,7 +190,7 @@ void Graph<T>::dijkstraShortestPath(Vertex<T> *v) {	// TODO
  * Returns a vector with the contents of the vertices by dfs order.
  * Follows the algorithm described in theoretical classes.
  */
-template <class T>
+/*template <class T>
 std::vector<T> Graph<T>::dfs() const {
     std::vector<T> res;
     for (Vertex<T> *v : vertexSet)
@@ -198,18 +198,18 @@ std::vector<T> Graph<T>::dfs() const {
     for (Vertex<T> *v : vertexSet)
         if (!v->visited) dfsVisit(v, res);
     return res;
-}
+}*/
 
 /*
  * Auxiliary function that visits a vertex (v) and its adjacent not yet visited, recursively.
  * Updates a parameter with the list of visited node contents.
  */
-template <class T>
+/*template <class T>
 void Graph<T>::dfsVisit(Vertex<T> *v, std::vector<T> & res) const {
     v->visited = true;
     res.push_back(v->info);
     for (Edge<T> *edge: v->outgoing)
         if (!edge->dest->visited) dfsVisit(edge->dest, res);
-}
+}*/
 
 #endif /* GRAPH_H_ */

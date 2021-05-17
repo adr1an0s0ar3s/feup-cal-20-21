@@ -3,26 +3,15 @@ project(market_on_wheels)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(market_on_wheels
-        main.cpp
+set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
-        src/market/Client.cpp
-        src/market/Client.h
-        src/market/Order.cpp
-        src/market/Order.h
-        src/market/Product.cpp
-        src/market/Product.h
-        src/market/Stock.cpp
-        src/market/Stock.h
-        src/market/Supplier.cpp
-        src/market/Supplier.h
-        src/market/Vehicle.cpp
-        src/market/Vehicle.h
+# Build GraphViewerCpp
+set(GRAPHVIEWERCPP_PATH lib/GraphViewerCpp)
+add_subdirectory(${GRAPHVIEWERCPP_PATH})
+include_directories(${GRAPHVIEWERCPP_PATH}/include)
 
-        src/util/Time.cpp
-        src/util/Time.h
-        src/util/Input.cpp
-        src/util/Input.h
+file(GLOB SOURCE_FILES CONFIGURE_DEPENDS src/*.cpp src/*.h)
+add_executable(market_on_wheels ${SOURCE_FILES})
 
-        src/Application.cpp
-        src/Application.h)
+target_link_libraries(market_on_wheels graphviewer)
