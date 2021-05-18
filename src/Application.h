@@ -2,7 +2,9 @@
 #define MARKET_ON_WHEELS_APPLICATION_H
 
 #include "graph/Graph.h"
-// #include "graph/Node.h"
+#include "graph/Node.h"
+
+#include "gui/GUI.h"
 
 #include "market/Client.h"
 #include "market/Order.h"
@@ -14,7 +16,8 @@
 
 class Application {
 private:
-    // Graph<Node> graph;
+    Graph<Node> graph;
+    GUI gui;
 
     std::vector<Client> clients;
     std::vector<Order> orders;
@@ -23,14 +26,17 @@ private:
     std::vector<Vehicle> vehicles;
 
     struct IOFiles {
-        const std::string nodesFile = "";
-        const std::string edgesFile = "";
-        const std::string clientsFile = "";
-        const std::string ordersFile = "";
-        const std::string productsFile = "";
-        const std::string suppliersFile = "";
-        const std::string vehiclesFile = "";
+        const std::string nodesFile = "nodes_xy.txt";
+        const std::string edgesFile = "edges.txt";
+        const std::string clientsFile = "clients.txt";
+        const std::string ordersFile = "orders.txt";
+        const std::string productsFile = "products.txt";
+        const std::string suppliersFile = "suppliers.txt";
+        const std::string vehiclesFile = "vehicles.txt";
+        std::string map = "espinho";
     };
+
+    IOFiles files;
 
     bool loadNodes();
 

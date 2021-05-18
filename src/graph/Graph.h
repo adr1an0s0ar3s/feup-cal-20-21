@@ -116,6 +116,7 @@ class Graph {
 
 public:
 	Vertex<T>* findVertex(const T &inf) const;
+    Vertex<T>* getVertex(int idx) const;
 	vector<Vertex<T> *> getVertexSet() const;
 	Vertex<T> *addVertex(const T &in);
 	Edge<T> *addEdge(const T &sourc, const T &dest, double weight);
@@ -148,6 +149,10 @@ Vertex<T>* Graph<T>::findVertex(const T & inf) const {
 		if (v->info == inf)
 			return v;
 	return nullptr;
+}
+template <class T>
+Vertex<T>* Graph<T>::getVertex(int idx) const {
+    return vertexSet.at(idx);
 }
 
 template <class T>

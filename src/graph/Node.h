@@ -12,7 +12,9 @@ private:
     Client * client;
     Supplier * supplier;
 public:
-    Node(int nodeId, int x, int y) : nodeId(nodeId), x(x), y(y), client(nullptr), supplier(nullptr) {}
+    Node(int nodeId, double x, double y) : nodeId(nodeId), x(x), y(y), client(nullptr), supplier(nullptr) {}
+    double getX() const {return x;}
+    double getY() const {return y;}
     void setClient(Client * client) {this->client = client;}
     void setSupplier(Supplier * supplier) {this->supplier = supplier;}
 };
