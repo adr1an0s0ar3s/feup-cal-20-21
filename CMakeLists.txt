@@ -11,7 +11,7 @@ set(GRAPHVIEWERCPP_PATH lib/GraphViewerCpp)
 add_subdirectory(${GRAPHVIEWERCPP_PATH})
 include_directories(${GRAPHVIEWERCPP_PATH}/include)
 
-file(GLOB SOURCE_FILES CONFIGURE_DEPENDS src/*.cpp src/*.h)
+file(GLOB SOURCE_FILES CONFIGURE_DEPENDS src/*.cpp src/*.h src/*/*.cpp src/*/*.h)
 add_executable(market_on_wheels ${SOURCE_FILES})
 
 target_link_libraries(market_on_wheels graphviewer)
