@@ -27,7 +27,7 @@ bool Application::loadNodes() {
         getline(file, line, ')');
         y = stod(line);
         Node n = Node(nodeId, x, y);
-        //graph.addVertex(n);
+        // TODO: NOT WORKING graph.addVertex(n);
     }
 
     file.close();
@@ -55,7 +55,7 @@ bool Application::loadEdges() {
         Node n1 = graph.getVertex(orig - 1)->getInfo();
         Node n2 = graph.getVertex(dest - 1)->getInfo();
         weight = distance(n1.getX(), n1.getY(), n2.getX(), n2.getY());
-        //graph.addEdge(n1, n2, weight);
+        // TODO: NOT WORKING graph.addEdge(n1, n2, weight);
     }
 
     file.close();
@@ -71,7 +71,7 @@ bool Application::loadClients() {
 
     getline(file, line);
     int nClients = stoi(line);
-    //clients = std::vector<Client>(nClients);
+    // TODO: NOT WORKING clients = std::vector<Client>(nClients);
     for (int i = 0; i < nClients; ++i) {
         getline(file, line, '(');
         getline(file, line, ',');
@@ -81,7 +81,7 @@ bool Application::loadClients() {
         nodeId = stoi(line);
 
         getline(file, line, ')');
-        //clients[i] = Client(clientId, nodeId, line);
+        clients[i] = Client(clientId, nodeId, line);
         // TODO: atualizar node com este client
     }
 
@@ -115,4 +115,8 @@ bool Application::loadData() {
         return false;
     }
     return true;
+}
+
+void Application::setMap(const string &map) {
+    files.map = map;
 };
