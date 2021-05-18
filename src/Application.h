@@ -4,8 +4,6 @@
 #include "graph/Graph.h"
 // #include "graph/Node.h"
 
-// #include "graphviewer/GraphViewer.h"
-
 #include "market/Client.h"
 #include "market/Order.h"
 #include "market/Product.h"
@@ -23,8 +21,6 @@ private:
     std::vector<Product> products;
     std::vector<Supplier> suppliers;
     std::vector<Vehicle> vehicles;
-
-    // GraphViewer gv;
 
     struct IOFiles {
         const std::string nodesFile = "";
@@ -50,10 +46,10 @@ private:
 
     bool loadVehicles();
 
+    bool loadData();
+
 public:
     Application();
-
-    bool loadData();
 };
 
 #endif //MARKET_ON_WHEELS_APPLICATION_H
