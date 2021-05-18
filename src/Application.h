@@ -4,8 +4,6 @@
 #include "graph/Graph.h"
 #include "graph/Node.h"
 
-#include "gui/GUI.h"
-
 #include "market/Client.h"
 #include "market/Order.h"
 #include "market/Product.h"
@@ -17,7 +15,6 @@
 class Application {
 private:
     Graph<Node> graph;
-    GUI gui;
 
     std::vector<Client> clients;
     std::vector<Order> orders;

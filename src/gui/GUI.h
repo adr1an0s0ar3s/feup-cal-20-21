@@ -1,9 +1,9 @@
 #ifndef MARKET_ON_WHEELS_GUI_H
 #define MARKET_ON_WHEELS_GUI_H
 
-#include "../graphviewer/graphviewer.h"
-#include "graph/Graph.h"
-#include "graph/Node.h"
+#include "../../lib/GraphViewerCpp/include/graphviewer.h"
+#include "../graph/Graph.h"
+#include "../graph/Node.h"
 
 using namespace std;
 
@@ -31,7 +31,7 @@ public:
      * @brief Show graph and the paths given
      * @param shortestPath Vector with paths
      */
-    void showMultiplePathsInMap(vector<Path> shortestPath);
+    //void showMultiplePathsInMap(vector<Path> shortestPath);
 
     /**
      * @brief Create the GraphViewer

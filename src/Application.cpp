@@ -4,7 +4,6 @@
 #include <fstream>
 
 Application::Application() {
-
 }
 
 bool Application::loadNodes() {
@@ -28,7 +27,7 @@ bool Application::loadNodes() {
         getline(file, line, ')');
         y = stod(line);
         Node n = Node(nodeId, x, y);
-        graph.addVertex(n);
+        //graph.addVertex(n);
     }
 
     file.close();
@@ -56,7 +55,7 @@ bool Application::loadEdges() {
         Node n1 = graph.getVertex(orig - 1)->getInfo();
         Node n2 = graph.getVertex(dest - 1)->getInfo();
         weight = distance(n1.getX(), n1.getY(), n2.getX(), n2.getY());
-        graph.addEdge(n1, n2, weight);
+        //graph.addEdge(n1, n2, weight);
     }
 
     file.close();
@@ -64,7 +63,30 @@ bool Application::loadEdges() {
 }
 
 bool Application::loadClients() {
-    return false;
+    std::string line;
+    int clientId, nodeId;
+
+    std::ifstream file("../maps/" + files.map + "/" + files.clientsFile);
+    if (!file.is_open()) return false;
+
+    getline(file, line);
+    int nClients = stoi(line);
+    //clients = std::vector<Client>(nClients);
+    for (int i = 0; i < nClients; ++i) {
+        getline(file, line, '(');
+        getline(file, line, ',');
+        clientId = stoi(line);
+
+        getline(file, line, ',');
+        nodeId = stoi(line);
+
+        getline(file, line, ')');
+        //clients[i] = Client(clientId, nodeId, line);
+        // TODO: atualizar node com este client
+    }
+
+    file.close();
+    return true;
 }
 
 bool Application::loadOrders() {
@@ -84,5 +106,13 @@ bool Application::loadVehicles() {
 }
 
 bool Application::loadData() {
-    return false;
+    if (!loadNodes()) {
+        std::cout << "Failed to load nodes\n";
+        return false;
+    }
+    if (!loadEdges()) {
+        std::cout << "Failed to load edges\n";
+        return false;
+    }
+    return true;
 };
