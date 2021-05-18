@@ -3,10 +3,13 @@
 
 class Vehicle {
 private:
+    int vehicleId;
     double capacity;
 
 public:
-    explicit Vehicle(int capacity);
+    explicit Vehicle(int vehicleId, double capacity);
+
+    int getVehicleId() const;
 
     double getCapacity() const;
 

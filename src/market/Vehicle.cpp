@@ -1,7 +1,12 @@
 #include "Vehicle.h"
 
-Vehicle::Vehicle(int capacity) {
+Vehicle::Vehicle(int vehicleId, double capacity) {
+    this->vehicleId = vehicleId;
     this->capacity = capacity;
+}
+
+int Vehicle::getVehicleId() const {
+    return this->vehicleId;
 }
 
 double Vehicle::getCapacity() const {

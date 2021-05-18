@@ -2,6 +2,7 @@
 #include "util/Utils.h"
 
 #include <fstream>
+#include <sstream>
 
 Application::Application() {
 }
@@ -90,7 +91,38 @@ bool Application::loadClients() {
 }
 
 bool Application::loadOrders() {
-    return false;
+    std::string line;
+    int orderId, clientId, productId, quantity;
+
+    std::ifstream file("../maps/" + files.map + "/" + files.ordersFile);
+    if (!file.is_open()) return false;
+
+    getline(file, line);
+    int nOrders = stoi(line);
+    // TODO: NOT WORKING orders = std::vector<Order>(nOrders);
+    for (int i = 0; i < nOrders; ++i) {
+        getline(file, line, '(');
+        getline(file, line, ',');
+        orderId = stoi(line);
+
+        getline(file, line, ',');
+        clientId = stoi(line);
+
+        getline(file, line, ')');
+
+        Order o(orderId, &(clients[clientId - 1]));
+        orders[i] = o;
+
+        stringstream ss(line);
+        while (getline(ss, line, ',')) {
+            stringstream ss2(line);
+            ss2 >> productId >> quantity;
+            orders[i].getProducts().setQuantity(productId, quantity);
+        }
+    }
+
+    file.close();
+    return true;
 }
 
 bool Application::loadProducts() {
@@ -102,7 +134,29 @@ bool Application::loadSuppliers() {
 }
 
 bool Application::loadVehicles() {
-    return false;
+    std::string line;
+    int vehicleId;
+    double capacity;
+
+    std::ifstream file("../maps/" + files.map + "/" + files.vehiclesFile);
+    if (!file.is_open()) return false;
+
+    getline(file, line);
+    int nVehicles = stoi(line);
+    // TODO: NOT WORKING vehicles = std::vector<Vehicle>(nVehicles);
+    for (int i = 0; i < nVehicles; ++i) {
+        getline(file, line, '(');
+        getline(file, line, ',');
+        vehicleId = stoi(line);
+
+        getline(file, line, ',');
+        capacity = stod(line);
+
+        vehicles[i] = Vehicle(vehicleId, capacity);
+    }
+
+    file.close();
+    return true;
 }
 
 bool Application::loadData() {
@@ -112,6 +166,15 @@ bool Application::loadData() {
     }
     if (!loadEdges()) {
         std::cout << "Failed to load edges\n";
+        return false;
+    }
+    if (!loadOrders()) {
+        std::cout << "Failed to load orders\n";
+        return false;
+    }
+
+    if (!loadVehicles()) {
+        std::cout << "Failed to load vehicles\n";
         return false;
     }
     return true;
