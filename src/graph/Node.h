@@ -6,8 +6,8 @@
 
 class Node {
 private:
-    int x;
-    int y;
+    double x;
+    double y;
     int nodeId;
     Client * client;
     Supplier * supplier;
