@@ -12,12 +12,12 @@ using namespace std;
  */
 class GUI {
 private:
-    Graph<Node> *graph;
+    const Graph<Node> *graph;
     GraphViewer *gv;
     int width;
     int height;
 public:
-    GUI(Graph<Node> * graph, int width, int height);
+    GUI(const Graph<Node> *graph, int width, int height);
 
     void setGraph(Graph<Node> * graph);
     Graph<Node> * getGraph();

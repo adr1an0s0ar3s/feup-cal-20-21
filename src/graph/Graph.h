@@ -89,16 +89,40 @@ class Edge {
 	Vertex<T> * orig;
 	Vertex<T> * dest;
 	double weight;
-
-	Edge(Vertex<T> *o, Vertex<T> *d, double w);
-
 public:
+    Edge(Vertex<T> *o, Vertex<T> *d, double w);
 	friend class Graph<T>;
 	friend class Vertex<T>;
+
+    double getWeight() const;
+    Vertex<T> *getOrig() const;
+    Vertex<T> *getDest() const;
+
+    bool operator<(const Edge<T> & edge) const;
 };
 
 template <class T>
 Edge<T>::Edge(Vertex<T> *o, Vertex<T> *d, double w): orig(o), dest(d), weight(w) {}
+
+template <class T>
+double Edge<T>::getWeight() const {
+    return weight;
+}
+
+template <class T>
+Vertex<T> *Edge<T>::getOrig() const {
+    return orig;
+}
+
+template <class T>
+Vertex<T> *Edge<T>::getDest() const {
+    return dest;
+}
+
+template <class T>
+bool Edge<T>::operator<(const Edge<T> & edge) const {
+    return this->weight < edge.weight;
+}
 
 /*
  * ================================================================================================
@@ -120,6 +144,7 @@ public:
 	vector<Vertex<T> *> getVertexSet() const;
 	Vertex<T> *addVertex(const T &in);
 	Edge<T> *addEdge(const T &sourc, const T &dest, double weight);
+	void clear();
 };
 
 template <class T>
@@ -158,6 +183,15 @@ Vertex<T>* Graph<T>::getVertex(int idx) const {
 template <class T>
 vector<Vertex<T> *> Graph<T>::getVertexSet() const {
 	return vertexSet;
+}
+
+template <class T>
+void Graph<T>::clear() {
+    for (Vertex<T> *vertex: vertexSet) {
+        for (Edge<T> *edge: vertex->getOutgoing()) delete edge;
+        delete vertex;
+    }
+    vertexSet.clear();
 }
 
 template<class T>

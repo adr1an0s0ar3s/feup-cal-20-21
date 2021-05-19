@@ -54,6 +54,8 @@ private:
 public:
     Application();
 
+    const Graph<Node> & getGraph() const;
+
     void setMap(const std::string &map);
 };
 

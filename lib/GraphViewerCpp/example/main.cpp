@@ -57,7 +57,7 @@ sf::Color colorStringToSFColor(std::string colorStr){
 }
 
 GraphViewer* drawGraphFromFile(std::string name){
-    std::ifstream nodes(getPathFromFilename(__FILE__)+"/resources/graphs/"+name+"/nodes.txt");
+    std::ifstream nodes(getPathFromFilename(__FILE__)+"/resources/graphs/"+name+"/nodes_xy.txt");
     std::ifstream edges(getPathFromFilename(__FILE__)+"/resources/graphs/"+name+"/edges.txt");
     std::ifstream window(getPathFromFilename(__FILE__)+"/resources/graphs/"+name+"/window.txt");
     std::string line, background_path;

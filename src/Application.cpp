@@ -5,6 +5,11 @@
 #include <sstream>
 
 Application::Application() {
+    loadData();
+}
+
+const Graph<Node> & Application::getGraph() const {
+    return this->graph;
 }
 
 bool Application::loadNodes() {
@@ -27,6 +32,7 @@ bool Application::loadNodes() {
 
         getline(file, line, ')');
         y = stof(line);
+
         Node n = Node(nodeId, x, y);
         graph.addVertex(n);
     }
@@ -53,8 +59,8 @@ bool Application::loadEdges() {
         getline(file, line, ')');
         dest = stoi(line);
 
-        Node n1 = graph.getVertex(orig - 1)->getInfo();
-        Node n2 = graph.getVertex(dest - 1)->getInfo();
+        Node n1 = graph.getVertex(orig-1)->getInfo();
+        Node n2 = graph.getVertex(dest-1)->getInfo();
         weight = distance(n1.getX(), n1.getY(), n2.getX(), n2.getY());
         graph.addEdge(n1, n2, weight);
     }
@@ -83,7 +89,7 @@ bool Application::loadClients() {
 
         getline(file, line, ')');
         clients[i] = Client(clientId, nodeId, line);
-        // TODO: atualizar node com este client
+        graph.getVertex(nodeId - 1)->getInfo().setClient(&clients[i]);
     }
 
     file.close();
@@ -137,6 +143,7 @@ bool Application::loadProducts() {
     products = std::vector<Product>(nProducts);
     for (int i = 0; i < nProducts; ++i) {
         getline(file, line, '(');
+
         getline(file, line, ',');
         productId = stoi(line);
 
@@ -146,10 +153,8 @@ bool Application::loadProducts() {
         getline(file, line, ',');
         weight = stod(line);
 
-        getline(file, line, ',');
-        cost = stod(line);
-
         getline(file, line, ')');
+        cost = stod(line);
 
         products[i] = Product(productId, name, weight, cost);
     }
@@ -186,6 +191,7 @@ bool Application::loadSuppliers() {
             ss2 >> productId >> quantity;
             suppliers[i].getStock().setQuantity(productId, quantity);
         }
+        graph.getVertex(nodeId - 1)->getInfo().setSupplier(&suppliers[i]);
     }
 
     file.close();
@@ -219,12 +225,17 @@ bool Application::loadVehicles() {
 }
 
 bool Application::loadData() {
+    graph.clear();
     if (!loadNodes()) {
         std::cout << "Failed to load nodes\n";
         return false;
     }
     if (!loadEdges()) {
         std::cout << "Failed to load edges\n";
+        return false;
+    }
+    if (!loadClients()) {
+        std::cout << "Failed to load clients\n";
         return false;
     }
     if (!loadOrders()) {
@@ -248,5 +259,5 @@ bool Application::loadData() {
 
 void Application::setMap(const string &map) {
     files.map = map;
-    //loadData();
+    loadData();
 };

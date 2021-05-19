@@ -2,6 +2,8 @@
 #define MARKET_ON_WHEELS_MENU_H
 
 #include "../Application.h"
+#include "../gui/GUI.h"
+#include "../graph/Node.h"
 
 #define CLR_SCREEN "\033[2J\033[1;1H"
 
@@ -35,6 +37,7 @@ public:
 };
 
 class GraphMenu : public Menu {
+    GUI gui;
 public:
     explicit GraphMenu(Application &application);
     void show() override;

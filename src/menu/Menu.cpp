@@ -56,7 +56,8 @@ Menu * MainMenu::getNextMenu() {
 
 // --------------- Graph Menu ---------------
 
-GraphMenu::GraphMenu(Application &application) : Menu(application) {}
+GraphMenu::GraphMenu(Application &application) : Menu(application), gui(GUI(&application.getGraph(), 400, 400)) {}
+
 void GraphMenu::show() {
     unsigned int options = 0;
 
@@ -83,13 +84,17 @@ Menu * GraphMenu::getNextMenu() {
         case 1: return this;
         case 2: return this;
         case 3: return this;
-        case 4: return this;
+        case 4:
+            gui.show();
+            break;
         case 5: return this;
         case 6: return this;
         case 7: return this;
         case 8: return this;
+        default: return invalidOption();
     }
-    return invalidOption();
+    waitEnter();
+    return this;
 }
 
 // --------------- Map Menu ---------------
