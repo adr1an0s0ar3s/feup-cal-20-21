@@ -38,6 +38,7 @@ void MainMenu::show() {
 
     std::cout << "Main Menu:\n\n";
     std::cout << "[" << ++options << "] " << "Graph Visualisation\n";
+    std::cout << "[" << ++options << "] " << "Map Selector\n";
     std::cout << "\n[0] Exit\n";
 }
 Menu * MainMenu::getNextMenu() {
@@ -47,12 +48,13 @@ Menu * MainMenu::getNextMenu() {
     }
     switch(option){
         case 0: return nullptr;
-        case 1: return this;
+        case 1: return new GraphMenu(application);
+        case 2: return new MapMenu(application);
     }
     return invalidOption();
 }
 
-// --------------- Main Menu ---------------
+// --------------- Graph Menu ---------------
 
 GraphMenu::GraphMenu(Application &application) : Menu(application) {}
 void GraphMenu::show() {
@@ -88,4 +90,49 @@ Menu * GraphMenu::getNextMenu() {
         case 8: return this;
     }
     return invalidOption();
+}
+
+// --------------- Map Menu ---------------
+
+MapMenu::MapMenu(Application &application) : Menu(application) {}
+void MapMenu::show() {
+    unsigned int options = 0;
+
+    std::cout << CLR_SCREEN;
+
+    std::cout << "Map Menu:\n\nSelect a map:\n\n";
+    std::cout << "[" << ++options << "] " << "Espinho Full\n";
+    std::cout << "[" << ++options << "] " << "Espinho Strong\n";
+    std::cout << "[" << ++options << "] " << "Penafiel Full\n";
+    std::cout << "[" << ++options << "] " << "Penafiel Strong\n";
+    std::cout << "[" << ++options << "] " << "Porto Full\n";
+    std::cout << "[" << ++options << "] " << "Porto Strong\n";
+    std::cout << "[" << ++options << "] " << "Grid 4x4\n";
+    std::cout << "[" << ++options << "] " << "Grid 8x8\n";
+    std::cout << "[" << ++options << "] " << "Grid 16x16\n";
+    std::cout << "\n[0] Exit\n";
+}
+Menu * MapMenu::getNextMenu() {
+    int option;
+    if(!get(option)){
+        return invalidOption();
+    }
+    std::string map;
+    switch(option){
+        case 0: return nullptr;
+        case 1: map = "espinho_full"; break;
+        case 2: map = "espinho_strong"; break;
+        case 3: map = "penafiel_full"; break;
+        case 4: map = "penafiel_strong"; break;
+        case 5: map = "porto_full"; break;
+        case 6: map = "porto_strong"; break;
+        case 7: map = "other/GridGraphs/4x4"; break;
+        case 8: map = "other/GridGraphs/8x8"; break;
+        case 9: map = "other/GridGraphs/16x16"; break;
+        default: return invalidOption();
+    }
+    application.setMap(map);
+    std::cout << "Map changed successfully\n";
+    waitEnter();
+    return nullptr;
 }
