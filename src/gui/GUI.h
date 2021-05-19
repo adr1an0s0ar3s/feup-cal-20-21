@@ -12,8 +12,8 @@ using namespace std;
  */
 class GUI {
 private:
-    Graph<Node> * graph;
-    GraphViewer * gv;
+    Graph<Node> *graph;
+    GraphViewer *gv;
     int width;
     int height;
 public:

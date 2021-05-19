@@ -10,7 +10,7 @@ Application::Application() {
 bool Application::loadNodes() {
     std::string line;
     int nodeId;
-    double x, y;
+    float x, y;
 
     std::ifstream file("../maps/" + files.map + "/" + files.nodesFile);
     if (!file.is_open()) return false;
@@ -23,10 +23,10 @@ bool Application::loadNodes() {
         nodeId = stoi(line);
 
         getline(file, line, ',');
-        x = stod(line);
+        x = stof(line);
 
         getline(file, line, ')');
-        y = stod(line);
+        y = stof(line);
         Node n = Node(nodeId, x, y);
         graph.addVertex(n);
     }
