@@ -1,5 +1,11 @@
 #include "Supplier.h"
 
+Supplier::Supplier() {
+    this->supplierId = 0;
+    this->nodeId = 0;
+    this->stock = Stock();
+}
+
 Supplier::Supplier(int supplierId, int nodeId) {
     this->supplierId = supplierId;
     this->nodeId = nodeId;

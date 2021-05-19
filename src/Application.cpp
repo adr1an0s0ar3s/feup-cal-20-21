@@ -28,7 +28,7 @@ bool Application::loadNodes() {
         getline(file, line, ')');
         y = stod(line);
         Node n = Node(nodeId, x, y);
-        // TODO: NOT WORKING graph.addVertex(n);
+        graph.addVertex(n);
     }
 
     file.close();
@@ -56,7 +56,7 @@ bool Application::loadEdges() {
         Node n1 = graph.getVertex(orig - 1)->getInfo();
         Node n2 = graph.getVertex(dest - 1)->getInfo();
         weight = distance(n1.getX(), n1.getY(), n2.getX(), n2.getY());
-        // TODO: NOT WORKING graph.addEdge(n1, n2, weight);
+        graph.addEdge(n1, n2, weight);
     }
 
     file.close();
@@ -72,7 +72,7 @@ bool Application::loadClients() {
 
     getline(file, line);
     int nClients = stoi(line);
-    // TODO: NOT WORKING clients = std::vector<Client>(nClients);
+    clients = std::vector<Client>(nClients);
     for (int i = 0; i < nClients; ++i) {
         getline(file, line, '(');
         getline(file, line, ',');
@@ -99,7 +99,7 @@ bool Application::loadOrders() {
 
     getline(file, line);
     int nOrders = stoi(line);
-    // TODO: NOT WORKING orders = std::vector<Order>(nOrders);
+    orders = std::vector<Order>(nOrders);
     for (int i = 0; i < nOrders; ++i) {
         getline(file, line, '(');
         getline(file, line, ',');
@@ -110,8 +110,7 @@ bool Application::loadOrders() {
 
         getline(file, line, ')');
 
-        Order o(orderId, &(clients[clientId - 1]));
-        orders[i] = o;
+        orders[i] = Order(orderId, &(clients[clientId - 1]));
 
         stringstream ss(line);
         while (getline(ss, line, ',')) {
@@ -126,11 +125,71 @@ bool Application::loadOrders() {
 }
 
 bool Application::loadProducts() {
-    return false;
+    std::string line, name;
+    int productId;
+    double weight, cost;
+
+    std::ifstream file("../maps/" + files.map + "/" + files.productsFile);
+    if (!file.is_open()) return false;
+
+    getline(file, line);
+    int nProducts = stoi(line);
+    products = std::vector<Product>(nProducts);
+    for (int i = 0; i < nProducts; ++i) {
+        getline(file, line, '(');
+        getline(file, line, ',');
+        productId = stoi(line);
+
+        getline(file, line, ',');
+        name = line;
+
+        getline(file, line, ',');
+        weight = stod(line);
+
+        getline(file, line, ',');
+        cost = stod(line);
+
+        getline(file, line, ')');
+
+        products[i] = Product(productId, name, weight, cost);
+    }
+
+    file.close();
+    return true;
 }
 
 bool Application::loadSuppliers() {
-    return false;
+    std::string line;
+    int supplierId, nodeId, productId, quantity;
+
+    std::ifstream file("../maps/" + files.map + "/" + files.suppliersFile);
+    if (!file.is_open()) return false;
+
+    getline(file, line);
+    int nSuppliers = stoi(line);
+    suppliers = std::vector<Supplier>(nSuppliers);
+    for (int i = 0; i < nSuppliers; ++i) {
+        getline(file, line, '(');
+        getline(file, line, ',');
+        supplierId = stoi(line);
+
+        getline(file, line, ',');
+        nodeId = stoi(line);
+
+        getline(file, line, ')');
+
+        suppliers[i] = Supplier(supplierId, nodeId);
+
+        stringstream ss(line);
+        while (getline(ss, line, ',')) {
+            stringstream ss2(line);
+            ss2 >> productId >> quantity;
+            suppliers[i].getStock().setQuantity(productId, quantity);
+        }
+    }
+
+    file.close();
+    return true;
 }
 
 bool Application::loadVehicles() {
@@ -143,7 +202,7 @@ bool Application::loadVehicles() {
 
     getline(file, line);
     int nVehicles = stoi(line);
-    // TODO: NOT WORKING vehicles = std::vector<Vehicle>(nVehicles);
+    vehicles = std::vector<Vehicle>(nVehicles);
     for (int i = 0; i < nVehicles; ++i) {
         getline(file, line, '(');
         getline(file, line, ',');
@@ -172,7 +231,14 @@ bool Application::loadData() {
         std::cout << "Failed to load orders\n";
         return false;
     }
-
+    if (!loadProducts()) {
+        std::cout << "Failed to load products\n";
+        return false;
+    }
+    if (!loadSuppliers()) {
+        std::cout << "Failed to load suppliers\n";
+        return false;
+    }
     if (!loadVehicles()) {
         std::cout << "Failed to load vehicles\n";
         return false;
@@ -182,4 +248,5 @@ bool Application::loadData() {
 
 void Application::setMap(const string &map) {
     files.map = map;
+    loadData();
 };

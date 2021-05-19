@@ -7,7 +7,9 @@ private:
     double capacity;
 
 public:
-    explicit Vehicle(int vehicleId, double capacity);
+    Vehicle();
+
+    Vehicle(int vehicleId, double capacity);
 
     int getVehicleId() const;
 

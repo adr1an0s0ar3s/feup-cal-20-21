@@ -17,6 +17,7 @@ public:
     double getY() const {return y;}
     void setClient(Client * client) {this->client = client;}
     void setSupplier(Supplier * supplier) {this->supplier = supplier;}
+    friend bool operator==(const Node &n1, const Node &n2) {return n1.nodeId == n2.nodeId;}
 };
 
 #endif //MARKET_ON_WHEELS_NODE_H

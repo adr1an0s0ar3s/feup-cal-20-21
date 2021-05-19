@@ -11,6 +11,7 @@ private:
     double cost;
 
 public:
+    Product();
     Product(int productId, const std::string & name, double weight, double cost);
 
     int getProductId() const;

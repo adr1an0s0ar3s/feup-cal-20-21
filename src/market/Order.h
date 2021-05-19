@@ -11,6 +11,7 @@ private:
     Stock products;
 
 public:
+    Order();
     Order(int orderId, Client * owner);
 
     int getOrderId() const;

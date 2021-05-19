@@ -11,6 +11,7 @@ private:
     std::string name;
 
 public:
+    Client();
     Client(int clientId, int nodeId, const std::string &name);
 
     int getClientId() const;

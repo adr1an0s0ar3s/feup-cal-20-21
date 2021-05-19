@@ -11,6 +11,7 @@ private:
     Stock stock;
 
 public:
+    Supplier();
     Supplier(int supplierId, int nodeId);
 
     int getSupplierId() const;

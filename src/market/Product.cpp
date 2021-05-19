@@ -1,5 +1,12 @@
 #include "Product.h"
 
+Product::Product() {
+    this->productId = 0;
+    this->name = "";
+    this->weight = 0;
+    this->cost = 0;
+}
+
 Product::Product(int productId, const std::string &name, double weight, double cost) {
     this->productId = productId;
     this->name = name;

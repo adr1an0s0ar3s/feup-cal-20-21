@@ -1,5 +1,10 @@
 #include "Vehicle.h"
 
+Vehicle::Vehicle() {
+    this->vehicleId = 0;
+    this->capacity = 0;
+}
+
 Vehicle::Vehicle(int vehicleId, double capacity) {
     this->vehicleId = vehicleId;
     this->capacity = capacity;
