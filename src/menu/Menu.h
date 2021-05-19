@@ -41,4 +41,11 @@ public:
     Menu * getNextMenu() override;
 };
 
+class MapMenu : public Menu {
+public:
+    explicit MapMenu(Application &application);
+    void show() override;
+    Menu * getNextMenu() override;
+};
+
 #endif //MARKET_ON_WHEELS_MENU_H

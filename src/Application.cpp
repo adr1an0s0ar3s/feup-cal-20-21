@@ -248,5 +248,5 @@ bool Application::loadData() {
 
 void Application::setMap(const string &map) {
     files.map = map;
-    loadData();
+    //loadData();
 };
