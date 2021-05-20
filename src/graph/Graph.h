@@ -10,6 +10,8 @@
 #include <limits>
 #include <iostream>
 #include "MutablePriorityQueue.h"
+#include "../util/Utils.h"
+#include "Path.h"
 
 using namespace std;
 
@@ -147,7 +149,7 @@ template <class T>
 class Graph {
 	vector<Vertex<T> *> vertexSet;
 
-	void dijkstraShortestPath(Vertex<T> *s);
+	Path dijkstraShortestPath(Vertex<T> *s, std::vector<Order> orders);
 	void dfsVisit(Vertex<T> *v, std::vector<T> & res) const;
     std::vector<T> dfs() const;
 
@@ -208,33 +210,46 @@ void Graph<T>::clear() {
 }
 
 template<class T>
-void Graph<T>::dijkstraShortestPath(Vertex<T> *v) {	// TODO
+Path Graph<T>::dijkstraShortestPath(Vertex<T> *v, std::vector<Order> orders) {
+    Path path;
 
-    for (Vertex<T> * v: vertexSet) {
-        v->dist = INF;
-        v->path = NULL;
-        v->visited = false;
-    }
+    while (!orders.empty()) {
 
-    v->dist = 0;
+        for (Vertex<T> *v: vertexSet) {
+            v->dist = INF;
+            v->path = NULL;
+            v->visited = false;
+        }
 
-    MutablePriorityQueue<Vertex<T>> q;
-    q.insert(v);
+        v->dist = 0;
 
-    while (!q.empty()) {
-        Vertex<T> *temp = q.extractMin();
-        for (Edge<T> w: temp->adj) {
-            if (w.dest->dist > temp->dist + w.weight) {
-                w.dest->dist = temp->dist + w.weight;
-                w.dest->path = temp;
-                if (!w.dest->visited) {
-                    w.dest->visited = true;
-                    q.insert(w.dest);
+        MutablePriorityQueue<Vertex<T>> q;
+        q.insert(v);
+
+        while (!q.empty()) {
+            Vertex<T> *temp = q.extractMin();
+
+            if (temp->getInfo().getSupplier() != nullptr && supplyProducts(orders, temp->getInfo().getSupplier())) {
+                break;
+            }
+
+            if (temp->getInfo().getClient() != nullptr && deliverProducts(orders, temp->getInfo().getClient())) {
+                break;
+            }
+
+            for (Edge<T> w: temp->adj) {
+                if (w.dest->dist > temp->dist + w.weight) {
+                    w.dest->dist = temp->dist + w.weight;
+                    w.dest->path = temp;
+                    if (!w.dest->visited) {
+                        w.dest->visited = true;
+                        q.insert(w.dest);
+                    } else q.decreaseKey(w.dest);
                 }
-                else q.decreaseKey(w.dest);
             }
         }
     }
+    return path;
 }
 
 /*

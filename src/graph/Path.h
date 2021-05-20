@@ -1,19 +1,19 @@
 #ifndef MARKET_ON_WHEELS_PATH_H
 #define MARKET_ON_WHEELS_PATH_H
 
-#include <vector>
+#include <list>
 
 class Path {
-    std::vector<int> path;
+    std::list<int> path;
     double length;
 
 public:
     Path();
-    Path(std::vector<int> path, double length);
+    Path(std::list<int> path, double length);
 
-    std::vector<int> getPath() const;
+    std::list<int> getPath() const;
     double getLength() const;
-    void addNode(int nodeId);
+    void addEdge(int nodeId);
 };
 
 #endif //MARKET_ON_WHEELS_PATH_H

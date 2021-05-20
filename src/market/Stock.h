@@ -4,6 +4,7 @@
 #include "Product.h"
 
 #include <map>
+#include <vector>
 
 class Stock {
 private:
@@ -14,9 +15,11 @@ public:
 
     int getQuantity(int productId) const;
 
+    std::vector<int> getIds() const;
+
     void setQuantity(int productId, int quantity);
 
-    bool checkHasQuantity(int productId, int quantity);
+    bool isEmpty();
 };
 
 #endif //MARKET_ON_WHEELS_STOCK_H
