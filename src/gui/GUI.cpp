@@ -38,6 +38,17 @@ void GUI::show() {
     gv->join();
 }
 
+void GUI::showPaths(const std::vector<Path> &paths) {
+    sf::Color colors[] = {sf::Color::Cyan, sf::Color::Red, sf::Color::Green, sf::Color::Blue, sf::Color::Magenta, sf::Color::White, sf::Color::Yellow};
+    int color = 0;
+    for (const Path &path: paths) {
+        for (int id: path.getPath()) {
+            gv->getEdge(id).setColor(colors[color]);
+            color = (color + 1) % 7;
+        }
+    }
+}
+
 GUI::~GUI() {
     if (gv != nullptr) {
         if (gv->isWindowOpen()) gv->closeWindow();

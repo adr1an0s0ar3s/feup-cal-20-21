@@ -4,6 +4,7 @@
 #include "../../lib/GraphViewerCpp/include/graphviewer.h"
 #include "../graph/Graph.h"
 #include "../graph/Node.h"
+#include "../graph/Path.h"
 
 using namespace std;
 
@@ -19,13 +20,12 @@ private:
 public:
     GUI(const Graph<Node> *graph, int width, int height);
 
-    void setGraph(Graph<Node> * graph);
-    Graph<Node> * getGraph();
-
     /**
      * @brief Show the full graph
      */
     void show();
+
+    void showPaths(const std::vector<Path> &paths);
 
     ~GUI();
 };
