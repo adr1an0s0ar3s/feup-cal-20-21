@@ -8,7 +8,7 @@ GUI::GUI(const Graph<Node> * graph, int width, int height): graph(graph), width(
     gv->setCenter(sf::Vector2f(width/2,height/2));
 
     for (Vertex<Node> *vertex: graph->getVertexSet()) {
-        // Add node
+
         Nd &node = gv->addNode(vertex->getInfo().getNodeId(), sf::Vector2f(vertex->getInfo().getX(), vertex->getInfo().getY()));
 
         if (vertex->getInfo().getClient() != nullptr) {         // If a vertex is a Client
@@ -24,13 +24,9 @@ GUI::GUI(const Graph<Node> * graph, int width, int height): graph(graph), width(
         }
     }
 
-    int id = 0;
-    for (Vertex<Node> *vertex : graph->getVertexSet()) {
-        for (Edge<Node> *edge : vertex->getOutgoing()) {
-            gv->addEdge(id, gv->getNode(vertex->getInfo().getNodeId()), gv->getNode(edge->getDest()->getInfo().getNodeId()), Ed::EdgeType::DIRECTED);
-            id++;
-        }
-    }
+    for (Vertex<Node> *vertex : graph->getVertexSet())
+        for (Edge<Node> *edge : vertex->getOutgoing())
+            gv->addEdge(edge->getId(), gv->getNode(vertex->getInfo().getNodeId()),gv->getNode(edge->getDest()->getInfo().getNodeId()), Ed::EdgeType::DIRECTED);
 }
 
 void GUI::show() {
@@ -42,10 +38,8 @@ void GUI::showPaths(const std::vector<Path> &paths) {
     sf::Color colors[] = {sf::Color::Cyan, sf::Color::Red, sf::Color::Green, sf::Color::Blue, sf::Color::Magenta, sf::Color::White, sf::Color::Yellow};
     int color = 0;
     for (const Path &path: paths) {
-        for (int id: path.getPath()) {
-            gv->getEdge(id).setColor(colors[color]);
-            color = (color + 1) % 7;
-        }
+        for (int id: path.getPath()) gv->getEdge(id).setColor(colors[color]);
+        color = (color + 1) % 7;
     }
 }
 
