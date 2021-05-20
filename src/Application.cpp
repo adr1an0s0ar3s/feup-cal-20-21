@@ -89,7 +89,9 @@ bool Application::loadClients() {
 
         getline(file, line, ')');
         clients[i] = Client(clientId, nodeId, line);
-        graph.getVertex(nodeId - 1)->getInfo().setClient(&clients[i]);
+        Node nd = graph.getVertex(nodeId - 1)->getInfo();
+        nd.setClient(&clients[i]);
+        graph.getVertex(nodeId - 1)->setInfo(nd);
     }
 
     file.close();
@@ -191,7 +193,10 @@ bool Application::loadSuppliers() {
             ss2 >> productId >> quantity;
             suppliers[i].getStock().setQuantity(productId, quantity);
         }
-        graph.getVertex(nodeId - 1)->getInfo().setSupplier(&suppliers[i]);
+
+        Node nd = graph.getVertex(nodeId - 1)->getInfo();
+        nd.setSupplier(&suppliers[i]);
+        graph.getVertex(nodeId - 1)->setInfo(nd);
     }
 
     file.close();

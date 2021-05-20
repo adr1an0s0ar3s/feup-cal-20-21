@@ -3,9 +3,7 @@
 using Nd = GraphViewer::Node;
 using Ed = GraphViewer::Edge;
 
-GUI::GUI(const Graph<Node> * graph, int width, int height): graph(graph), width(width), height(height), gv(new GraphViewer()) {}
-
-void GUI::show() {
+GUI::GUI(const Graph<Node> * graph, int width, int height): graph(graph), width(width), height(height), gv(new GraphViewer()) {
 
     gv->setCenter(sf::Vector2f(width/2,height/2));
 
@@ -15,14 +13,14 @@ void GUI::show() {
 
         if (vertex->getInfo().getClient() != nullptr) {         // If a vertex is a Client
             node.setLabel(vertex->getInfo().getClient()->getName());
-            node.setSize(15);
+            node.setSize(100);
             node.setColor(sf::Color::Red);
         } else if (vertex->getInfo().getSupplier() != nullptr) {  // If a vertex is a Supplier
             node.setLabel("Supplier");
-            node.setSize(15);
+            node.setSize(100);
             node.setColor(sf::Color::Green);
         } else {
-            node.setSize(5);
+            node.setSize(0);
         }
     }
 
@@ -33,25 +31,16 @@ void GUI::show() {
             id++;
         }
     }
-
-    gv->setEnabledNodes(false);
-    createGV();
 }
 
-void GUI::deleteGV() {
-    if (gv != nullptr) {
-        gv->closeWindow();
-        delete(gv);
-    }
-}
-
-void GUI::createGV() {
+void GUI::show() {
     gv->createWindow();
     gv->join();
 }
 
-void GUI::closeGV() {
-    cout << "Press Enter to exit graph viewer." << endl;
-    if (getchar() == '\n') deleteGV();
-    else cin.ignore(1000, '\n');
+GUI::~GUI() {
+    if (gv != nullptr) {
+        if (gv->isWindowOpen()) gv->closeWindow();
+        delete(gv);
+    }
 }

@@ -30,7 +30,7 @@ private:
         const std::string productsFile = "products.txt";
         const std::string suppliersFile = "suppliers.txt";
         const std::string vehiclesFile = "vehicles.txt";
-        std::string map = "espinho_full";
+        std::string map = "other/GridGraphs/4x4";
     };
 
     IOFiles files;

@@ -42,6 +42,7 @@ class Vertex {
 
 public:
 	T getInfo() const;
+	void setInfo(T info);
 	vector<Edge<T> *> getIncoming() const;
 	vector<Edge<T> *> getOutgoing() const;
 	friend class Graph<T>;
@@ -66,6 +67,11 @@ bool Vertex<T>::operator<(Vertex<T> & vertex) const {
 template <class T>
 T Vertex<T>::getInfo() const {
 	return this->info;
+}
+
+template <class T>
+void Vertex<T>::setInfo(T info) {
+    this->info = info;
 }
 
 template <class T>

@@ -27,26 +27,7 @@ public:
      */
     void show();
 
-    /**
-     * @brief Show graph and the paths given
-     * @param shortestPath Vector with paths
-     */
-    //void showMultiplePathsInMap(vector<Path> shortestPath);
-
-    /**
-     * @brief Create the GraphViewer
-     */
-    void createGV();
-
-    /**
-     * @brief Close the GraphViewer
-     */
-    void closeGV();
-
-    /**
-     * @brief Delete GraphViewer
-     */
-    void deleteGV();
+    ~GUI();
 };
 
 #endif //MARKET_ON_WHEELS_GUI_H

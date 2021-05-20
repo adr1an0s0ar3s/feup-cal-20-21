@@ -93,7 +93,6 @@ Menu * GraphMenu::getNextMenu() {
         case 8: return this;
         default: return invalidOption();
     }
-    waitEnter();
     return this;
 }
 
