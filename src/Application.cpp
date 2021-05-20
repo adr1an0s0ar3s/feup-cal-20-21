@@ -62,7 +62,7 @@ bool Application::loadEdges() {
         Node n1 = graph.getVertex(orig-1)->getInfo();
         Node n2 = graph.getVertex(dest-1)->getInfo();
         weight = distance(n1.getX(), n1.getY(), n2.getX(), n2.getY());
-        graph.addEdge(n1, n2, weight);
+        graph.addEdge(i, n1, n2, weight);
     }
 
     file.close();
