@@ -24,11 +24,13 @@ bool supplyProducts(std::vector<Order> &orders, Supplier &supplier) {
 }
 
 bool deliverProducts(std::vector<Order> &orders, Client &client) {
-    for (std::vector<Order>::iterator it = orders.begin(); it != orders.end(); ++it) {
+    bool delivery = false;
+    for (std::vector<Order>::iterator it = orders.begin(); it != orders.end();) {
         if (it->getOwner()->getClientId() == client.getClientId() && it->getProducts().isEmpty()) {
-            orders.erase(it);
-            return true;
+            it = orders.erase(it);
+            delivery = true;
         }
+        else ++it;
     }
-    return false;
+    return delivery;
 }
