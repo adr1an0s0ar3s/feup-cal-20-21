@@ -29,6 +29,8 @@ template <class T> class Graph;
 
 template <class T>
 class Vertex {
+private:
+
 	T info;
 	vector<Edge<T> *> outgoing;
 	vector<Edge<T> *> incoming;
@@ -38,53 +40,44 @@ class Vertex {
 	double dist;   // for path finding
 	int queueIndex = 0; // required by MutablePriorityQueue
 
-	Vertex(T in);
+	Vertex(T info);
 	void addEdge(Edge<T> *e);
-	bool operator<(Vertex<T> & vertex) const; // required by MutablePriorityQueue
+	bool operator<(Vertex<T> &vertex) const; // required by MutablePriorityQueue
 
 public:
+
 	T getInfo() const;
-	void setInfo(T info);
+	void setInfo(const T &info);
 	vector<Edge<T> *> getIncoming() const;
 	vector<Edge<T> *> getOutgoing() const;
 	friend class Graph<T>;
 	friend class MutablePriorityQueue<Vertex<T>>;
+
 };
 
-
 template <class T>
-Vertex<T>::Vertex(T in): info(in) {}
+Vertex<T>::Vertex(T info): info(info) {}
 
 template <class T>
 void Vertex<T>::addEdge(Edge<T> *e) {
-	outgoing.push_back(e);
-	e->dest->incoming.push_back(e);
+    outgoing.push_back(e);
+    e->dest->incoming.push_back(e);
 }
 
 template <class T>
-bool Vertex<T>::operator<(Vertex<T> & vertex) const {
-	return this->dist < vertex.dist;
-}
+bool Vertex<T>::operator<(Vertex<T> & vertex) const {return this->dist < vertex.dist;}
 
 template <class T>
-T Vertex<T>::getInfo() const {
-	return this->info;
-}
+T Vertex<T>::getInfo() const {return this->info;}
 
 template <class T>
-void Vertex<T>::setInfo(T info) {
-    this->info = info;
-}
+void Vertex<T>::setInfo(const T &info) {this->info = info;}
 
 template <class T>
-vector<Edge<T> *>  Vertex<T>::getIncoming() const {
-	return this->incoming;
-}
+vector<Edge<T> *>  Vertex<T>::getIncoming() const {return this->incoming;}
 
 template <class T>
-vector<Edge<T> *>  Vertex<T>::getOutgoing() const {
-	return this->outgoing;
-}
+vector<Edge<T> *>  Vertex<T>::getOutgoing() const {return this->outgoing;}
 
 /*
  * ================================================================================================
@@ -94,50 +87,43 @@ vector<Edge<T> *>  Vertex<T>::getOutgoing() const {
 
 template <class T>
 class Edge {
+private:
+
     int id;
 	Vertex<T> * orig;
 	Vertex<T> * dest;
 	double weight;
-public:
-    Edge(int id, Vertex<T> *o, Vertex<T> *d, double w);
-	friend class Graph<T>;
-	friend class Vertex<T>;
 
+public:
+
+    Edge(int id, Vertex<T> *o, Vertex<T> *d, double w);
 	int getId() const;
     double getWeight() const;
     Vertex<T> *getOrig() const;
     Vertex<T> *getDest() const;
+    bool operator<(const Edge<T> &edge) const;
+    friend class Graph<T>;
+    friend class Vertex<T>;
 
-    bool operator<(const Edge<T> & edge) const;
 };
 
 template <class T>
 Edge<T>::Edge(int id, Vertex<T> *o, Vertex<T> *d, double w): id(id), orig(o), dest(d), weight(w) {}
 
 template <class T>
-int Edge<T>::getId() const {
-    return id;
-}
+int Edge<T>::getId() const {return id;}
 
 template <class T>
-double Edge<T>::getWeight() const {
-    return weight;
-}
+double Edge<T>::getWeight() const {return weight;}
 
 template <class T>
-Vertex<T> *Edge<T>::getOrig() const {
-    return orig;
-}
+Vertex<T> *Edge<T>::getOrig() const {return orig;}
 
 template <class T>
-Vertex<T> *Edge<T>::getDest() const {
-    return dest;
-}
+Vertex<T> *Edge<T>::getDest() const {return dest;}
 
 template <class T>
-bool Edge<T>::operator<(const Edge<T> & edge) const {
-    return this->weight < edge.weight;
-}
+bool Edge<T>::operator<(const Edge<T> &edge) const {return this->weight < edge.weight;}
 
 /*
  * ================================================================================================
@@ -147,19 +133,23 @@ bool Edge<T>::operator<(const Edge<T> & edge) const {
 
 template <class T>
 class Graph {
+private:
+
 	vector<Vertex<T> *> vertexSet;
 
 	Path dijkstraShortestPath(Vertex<T> *s, std::vector<Order> orders);
-	void dfsVisit(Vertex<T> *v, std::vector<T> & res) const;
+	void dfsVisit(Vertex<T> *s, std::vector<T> & res) const;
     std::vector<T> dfs() const;
 
 public:
+
+    Vertex<T> *addVertex(const T &in);
+    Edge<T> *addEdge(int id, const T &sourc, const T &dest, double weight);
 	Vertex<T>* findVertex(const T &inf) const;
     Vertex<T>* getVertex(int idx) const;
 	vector<Vertex<T> *> getVertexSet() const;
-	Vertex<T> *addVertex(const T &in);
-	Edge<T> *addEdge(int id, const T &sourc, const T &dest, double weight);
 	void clear();
+
 };
 
 template <class T>
@@ -190,15 +180,12 @@ Vertex<T>* Graph<T>::findVertex(const T & inf) const {
 			return v;
 	return nullptr;
 }
-template <class T>
-Vertex<T>* Graph<T>::getVertex(int idx) const {
-    return vertexSet.at(idx);
-}
 
 template <class T>
-vector<Vertex<T> *> Graph<T>::getVertexSet() const {
-	return vertexSet;
-}
+Vertex<T>* Graph<T>::getVertex(int idx) const {return vertexSet.at(idx);}
+
+template <class T>
+vector<Vertex<T> *> Graph<T>::getVertexSet() const {return vertexSet;}
 
 template <class T>
 void Graph<T>::clear() {
@@ -210,7 +197,7 @@ void Graph<T>::clear() {
 }
 
 template<class T>
-Path Graph<T>::dijkstraShortestPath(Vertex<T> *v, std::vector<Order> orders) {
+Path Graph<T>::dijkstraShortestPath(Vertex<T> *s, std::vector<Order> orders) {
     Path path;
 
     while (!orders.empty()) {
@@ -221,10 +208,10 @@ Path Graph<T>::dijkstraShortestPath(Vertex<T> *v, std::vector<Order> orders) {
             v->visited = false;
         }
 
-        v->dist = 0;
+        s->dist = 0;
 
         MutablePriorityQueue<Vertex<T>> q;
-        q.insert(v);
+        q.insert(s);
 
         while (!q.empty()) {
             Vertex<T> *temp = q.extractMin();
