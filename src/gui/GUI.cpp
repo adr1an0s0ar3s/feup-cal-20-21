@@ -29,18 +29,35 @@ GUI::GUI(const Graph<Node> * graph, int width, int height): graph(graph), width(
             gv->addEdge(edge->getId(), gv->getNode(vertex->getInfo().getNodeId()),gv->getNode(edge->getDest()->getInfo().getNodeId()), Ed::EdgeType::DIRECTED);
 }
 
-void GUI::show() {
+void GUI::show(int centerId) {
+    // Draw center node
+    Nd &node = gv->getNode(centerId);
+    node.setLabel("Center");
+    node.setSize(100);
+    node.setColor(sf::Color::Cyan);
+
+    // Center on center node
+    gv->setCenter(node.getPosition());
+
     gv->createWindow();
     gv->join();
+    gv->closeWindow();
+
+    // Remove center node
+    node.setLabel("");
+    node.setSize(0);
+    node.setColor(sf::Color::Black);
 }
 
-void GUI::showPaths(const std::vector<Path> &paths) {
-    sf::Color colors[] = {sf::Color::Cyan, sf::Color::Red, sf::Color::Green, sf::Color::Blue, sf::Color::Magenta, sf::Color::White, sf::Color::Yellow};
+void GUI::showPaths(int centerId, const std::vector<Path> &paths) {
+    sf::Color colors[] = {sf::Color::Cyan, sf::Color::Red, sf::Color::Green, sf::Color::Blue, sf::Color::Magenta, sf::Color::Yellow};
     int color = 0;
     for (const Path &path: paths) {
         for (int id: path.getPath()) gv->getEdge(id).setColor(colors[color]);
-        color = (color + 1) % 7;
+        color = (color + 1) % 6;
     }
+    show(centerId);
+    for (const Path &path: paths) for (int id: path.getPath()) gv->getEdge(id).setColor(sf::Color::Black);
 }
 
 GUI::~GUI() {

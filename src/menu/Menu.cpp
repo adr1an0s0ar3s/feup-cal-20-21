@@ -64,8 +64,7 @@ void GraphMenu::show() {
     std::cout << CLR_SCREEN;
 
     std::cout << "Graph Menu:\n\n";
-    std::cout << "[" << ++options << "] " << "Change Type of Graph\n";
-    std::cout << "[" << ++options << "] " << "Change Origin Point\n";
+    std::cout << "[" << ++options << "] " << "Change Center Node\n";
     std::cout << "[" << ++options << "] " << "Show Current POI'S\n";
     std::cout << "[" << ++options << "] " << "Show Full Graph\n";
     std::cout << "[" << ++options << "] " << "Show Shortest Path\n";
@@ -81,16 +80,13 @@ Menu * GraphMenu::getNextMenu() {
     }
     switch(option){
         case 0: return nullptr;
-        case 1: return this;
+        case 1: return new CenterMenu(application);
         case 2: return this;
-        case 3: return this;
-        case 4:
-            gui.show();
-            break;
+        case 3: gui.show(application.getCenterId()); break;
+        case 4: gui.showPaths(application.getCenterId(), application.shortestPath());
         case 5: return this;
         case 6: return this;
         case 7: return this;
-        case 8: return this;
         default: return invalidOption();
     }
     return this;
@@ -137,6 +133,26 @@ Menu * MapMenu::getNextMenu() {
     }
     application.setMap(map);
     std::cout << "Map changed successfully\n";
+    waitEnter();
+    return nullptr;
+}
+
+// --------------- Center Menu ---------------
+
+CenterMenu::CenterMenu(Application &application) : Menu(application) {}
+void CenterMenu::show() {
+    std::cout << CLR_SCREEN;
+
+    std::cout << "Select the node that contains the center:\n\n";
+}
+Menu * CenterMenu::getNextMenu() {
+    int option;
+    if(!get(option) || option < 0){
+        return invalidOption();
+    }
+
+    application.setCenterId(option);
+    std::cout << "Center changed successfully to node " << option << std::endl;
     waitEnter();
     return nullptr;
 }

@@ -11,6 +11,7 @@
 #include <iostream>
 #include "MutablePriorityQueue.h"
 #include "../util/Utils.h"
+#include "../market/Order.h"
 #include "Path.h"
 
 using namespace std;
@@ -50,6 +51,7 @@ public:
 	void setInfo(const T &info);
 	vector<Edge<T> *> getIncoming() const;
 	vector<Edge<T> *> getOutgoing() const;
+	Edge<T> * getPath() const;
 	friend class Graph<T>;
 	friend class MutablePriorityQueue<Vertex<T>>;
 
@@ -78,6 +80,9 @@ vector<Edge<T> *>  Vertex<T>::getIncoming() const {return this->incoming;}
 
 template <class T>
 vector<Edge<T> *>  Vertex<T>::getOutgoing() const {return this->outgoing;}
+
+template <class T>
+Edge<T> * Vertex<T>::getPath() const {return path;}
 
 /*
  * ================================================================================================
@@ -137,9 +142,9 @@ private:
 
 	vector<Vertex<T> *> vertexSet;
 
-	Path dijkstraShortestPath(Vertex<T> *s, std::vector<Order> orders);
 	void dfsVisit(Vertex<T> *s, std::vector<T> & res) const;
     std::vector<T> dfs() const;
+    void savePath(Vertex<T> *v, Path &path) const;
 
 public:
 
@@ -149,6 +154,8 @@ public:
     Vertex<T>* getVertex(int idx) const;
 	vector<Vertex<T> *> getVertexSet() const;
 	void clear();
+
+    Path nearestNeighbor(int id, std::vector<Order> orders);
 
 };
 
@@ -197,14 +204,17 @@ void Graph<T>::clear() {
 }
 
 template<class T>
-Path Graph<T>::dijkstraShortestPath(Vertex<T> *s, std::vector<Order> orders) {
+Path Graph<T>::nearestNeighbor(int id, std::vector<Order> orders) {
+
     Path path;
+    Vertex<T> *s;
+    if ((s = getVertex(id - 1)) == nullptr) return path;
 
     while (!orders.empty()) {
 
         for (Vertex<T> *v: vertexSet) {
             v->dist = INF;
-            v->path = NULL;
+            v->path = nullptr;
             v->visited = false;
         }
 
@@ -217,26 +227,45 @@ Path Graph<T>::dijkstraShortestPath(Vertex<T> *s, std::vector<Order> orders) {
             Vertex<T> *temp = q.extractMin();
 
             if (temp->getInfo().getSupplier() != nullptr && supplyProducts(orders, temp->getInfo().getSupplier())) {
+                savePath(temp, path);
+                s = temp;
                 break;
             }
 
             if (temp->getInfo().getClient() != nullptr && deliverProducts(orders, temp->getInfo().getClient())) {
+                savePath(temp, path);
+                s = temp;
                 break;
             }
 
-            for (Edge<T> w: temp->adj) {
-                if (w.dest->dist > temp->dist + w.weight) {
-                    w.dest->dist = temp->dist + w.weight;
-                    w.dest->path = temp;
-                    if (!w.dest->visited) {
-                        w.dest->visited = true;
-                        q.insert(w.dest);
-                    } else q.decreaseKey(w.dest);
+            for (Edge<T> *e: temp->outgoing) {
+                if (e->dest->dist > temp->dist + e->weight) {
+                    e->dest->dist = temp->dist + e->weight;
+                    e->dest->path = e;
+                    if (!e->dest->visited) {
+                        e->dest->visited = true;
+                        q.insert(e->dest);
+                    } else q.decreaseKey(e->dest);
                 }
             }
         }
     }
+
     return path;
+}
+
+template <class T>
+void Graph<T>::savePath(Vertex<T> *v, Path &path) const {
+    std::stack<int> temp;
+    Edge<T> *e;
+    while ((e = v->getPath()) != nullptr) {
+        temp.push(e->getId());
+        v = e->getOrig();
+    }
+    while (!temp.empty()) {
+        path.addEdge(temp.top());
+        temp.pop();
+    }
 }
 
 /*

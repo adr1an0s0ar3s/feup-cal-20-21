@@ -15,6 +15,7 @@
 class Application {
 private:
     Graph<Node> graph;
+    int centerID;
 
     std::vector<Client> clients;
     std::vector<Order> orders;
@@ -56,7 +57,13 @@ public:
 
     const Graph<Node> & getGraph() const;
 
+    int getCenterId() const;
+
+    void setCenterId(int centerID);
+
     void setMap(const std::string &map);
+
+    std::vector<Path> shortestPath();
 };
 
 #endif //MARKET_ON_WHEELS_APPLICATION_H

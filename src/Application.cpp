@@ -6,10 +6,19 @@
 
 Application::Application() {
     loadData();
+    this->centerID = 1;
 }
 
 const Graph<Node> & Application::getGraph() const {
     return this->graph;
+}
+
+int Application::getCenterId() const {
+    return this->centerID;
+}
+
+void Application::setCenterId(int centerID) {
+    this->centerID = centerID;
 }
 
 bool Application::loadNodes() {
@@ -266,3 +275,9 @@ void Application::setMap(const string &map) {
     files.map = map;
     loadData();
 };
+
+std::vector<Path> Application::shortestPath() {
+    std::vector<Path> result;
+    result.push_back(graph.nearestNeighbor(centerID, orders));
+    return result;
+}

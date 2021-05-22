@@ -22,10 +22,12 @@ public:
 
     /**
      * @brief Show the full graph
+     *
+     * @param centerId id of the center
      */
-    void show();
+    void show(int centerId);
 
-    void showPaths(const std::vector<Path> &paths);
+    void showPaths(int centerId, const std::vector<Path> &paths);
 
     ~GUI();
 };
