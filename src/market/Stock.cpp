@@ -2,6 +2,7 @@
 
 Stock::Stock() {
     this->inventory = std::map<int, int>();
+    this->totalWeight = 0;
 }
 
 int Stock::getQuantity(int productId) const {
@@ -24,20 +25,22 @@ std::vector<int> Stock::getIds() const {
     return result;
 }
 
-void Stock::setQuantity(int productId, int quantity) {
+double Stock::getTotalWeight() const {
+    return this->totalWeight;
+};
+
+void Stock::setQuantity(int productId, int quantity, const std::vector<Product> &products) {
     std::pair<std::map<int, int>::iterator , bool> result = this->inventory.insert(std::pair<int, int> (productId, quantity));
-    if (!result.second) result.first->second = quantity;
+    if (!result.second) {
+        totalWeight += (quantity - result.first->second) * products[productId - 1].getWeight();
+        result.first->second = quantity;
+    }
+    else {
+        totalWeight += quantity * products[productId - 1].getWeight();
+    }
     if (quantity == 0) inventory.erase(result.first);
 }
 
 bool Stock::isEmpty() {
     return this->inventory.empty();
-}
-
-int Stock::getSize() {
-    int c  = 0;
-    for (int i : this->getIds()) {
-        c += this->getQuantity(i);
-    }
-    return c;
 }

@@ -134,7 +134,7 @@ bool Application::loadOrders() {
         while (getline(ss, line, ',')) {
             stringstream ss2(line);
             ss2 >> productId >> quantity;
-            orders[i].getProducts().setQuantity(productId, quantity);
+            orders[i].getProducts().setQuantity(productId, quantity, products);
         }
     }
 
@@ -201,7 +201,7 @@ bool Application::loadSuppliers() {
         while (getline(ss, line, ',')) {
             stringstream ss2(line);
             ss2 >> productId >> quantity;
-            suppliers[i].getStock().setQuantity(productId, quantity);
+            suppliers[i].getStock().setQuantity(productId, quantity, products);
         }
 
         Node nd = graph.getVertex(nodeId - 1)->getInfo();
@@ -253,12 +253,12 @@ bool Application::loadData() {
         std::cout << "Failed to load clients\n";
         return false;
     }
-    if (!loadOrders()) {
-        std::cout << "Failed to load orders\n";
-        return false;
-    }
     if (!loadProducts()) {
         std::cout << "Failed to load products\n";
+        return false;
+    }
+    if (!loadOrders()) {
+        std::cout << "Failed to load orders\n";
         return false;
     }
     if (!loadSuppliers()) {
@@ -282,19 +282,20 @@ std::vector<Path> Application::shortestPath() {
     sort(vehicles.begin(), vehicles.end());
 
     std::vector<Path> result;
-    int currentCapacity;
+    double currentCapacity;
 
     for (Vehicle v : vehicles) {
         currentCapacity = 0;
         std::vector<Order> vehicleOrders;
         for (std::vector<Order>::iterator itr = orders.begin(); itr != orders.end();) {
-            if (v.getMaxCapacity() >= itr->getProducts().getSize() + currentCapacity) {
+            if (v.getMaxCapacity() >= itr->getProducts().getTotalWeight() + currentCapacity) {
                 vehicleOrders.push_back(*itr);
+                currentCapacity += itr->getProducts().getTotalWeight();
                 itr = orders.erase(itr);
             }
             else itr++;
         }
-        result.push_back(graph.nearestNeighbor(centerID, vehicleOrders));
+        result.push_back(graph.nearestNeighbor(centerID, vehicleOrders, this->products));
     }
     return result;
 }
