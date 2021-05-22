@@ -20,6 +20,8 @@ public:
     void setQuantity(int productId, int quantity);
 
     bool isEmpty();
+
+    int getSize();
 };
 
 #endif //MARKET_ON_WHEELS_STOCK_H

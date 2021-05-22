@@ -2,26 +2,26 @@
 
 Vehicle::Vehicle() {
     this->vehicleId = 0;
-    this->capacity = 0;
+    this->maxCapacity = 0;
 }
 
-Vehicle::Vehicle(int vehicleId, double capacity) {
+Vehicle::Vehicle(int vehicleId, double maxCapacity) {
     this->vehicleId = vehicleId;
-    this->capacity = capacity;
+    this->maxCapacity = maxCapacity;
 }
 
 int Vehicle::getVehicleId() const {
     return this->vehicleId;
 }
 
-double Vehicle::getCapacity() const {
-    return this->capacity;
+double Vehicle::getMaxCapacity() const {
+    return this->maxCapacity;
 }
 
-void Vehicle::setCapacity(int newCapacity) {
-    this->capacity = newCapacity;
+void Vehicle::setMaxCapacity(int newCapacity) {
+    this->maxCapacity = newCapacity;
 }
 
 bool Vehicle::operator<(const Vehicle &v) const {
-    return this->capacity < v.getCapacity();
+    return this->maxCapacity < v.getMaxCapacity();
 }

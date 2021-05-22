@@ -4,18 +4,18 @@
 class Vehicle {
 private:
     int vehicleId;
-    double capacity;
+    double maxCapacity;
 
 public:
     Vehicle();
 
-    Vehicle(int vehicleId, double capacity);
+    Vehicle(int vehicleId, double maxCapacity);
 
     int getVehicleId() const;
 
-    double getCapacity() const;
+    double getMaxCapacity() const;
 
-    void setCapacity(int newCapacity);
+    void setMaxCapacity(int newCapacity);
 
     bool operator<(const Vehicle &v) const;
 };

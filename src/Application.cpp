@@ -3,6 +3,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <algorithm>
 
 Application::Application() {
     loadData();
@@ -277,7 +278,23 @@ void Application::setMap(const string &map) {
 };
 
 std::vector<Path> Application::shortestPath() {
+    sort(orders.begin(), orders.end());
+    sort(vehicles.begin(), vehicles.end());
+
     std::vector<Path> result;
-    result.push_back(graph.nearestNeighbor(centerID, orders));
+    int currentCapacity;
+
+    for (Vehicle v : vehicles) {
+        currentCapacity = 0;
+        std::vector<Order> vehicleOrders;
+        for (std::vector<Order>::iterator itr = orders.begin(); itr != orders.end();) {
+            if (v.getMaxCapacity() >= itr->getProducts().getSize() + currentCapacity) {
+                vehicleOrders.push_back(*itr);
+                itr = orders.erase(itr);
+            }
+            else itr++;
+        }
+        result.push_back(graph.nearestNeighbor(centerID, vehicleOrders));
+    }
     return result;
 }

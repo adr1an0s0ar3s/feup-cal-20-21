@@ -33,3 +33,11 @@ void Stock::setQuantity(int productId, int quantity) {
 bool Stock::isEmpty() {
     return this->inventory.empty();
 }
+
+int Stock::getSize() {
+    int c  = 0;
+    for (int i : this->getIds()) {
+        c += this->getQuantity(i);
+    }
+    return c;
+}
