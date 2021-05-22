@@ -134,7 +134,7 @@ bool Application::loadOrders() {
         while (getline(ss, line, ',')) {
             stringstream ss2(line);
             ss2 >> productId >> quantity;
-            orders[i].getProducts().setQuantity(productId, quantity, products);
+            orders[i].getProducts().setQuantity(productId, quantity);
         }
     }
 
@@ -201,7 +201,7 @@ bool Application::loadSuppliers() {
         while (getline(ss, line, ',')) {
             stringstream ss2(line);
             ss2 >> productId >> quantity;
-            suppliers[i].getStock().setQuantity(productId, quantity, products);
+            suppliers[i].getStock().setQuantity(productId, quantity);
         }
 
         Node nd = graph.getVertex(nodeId - 1)->getInfo();
@@ -284,11 +284,20 @@ void Application::reset() {
 
 std::vector<Order> & Application::filterOrders() {
     Stock allSuppliers;
-    for (std::vector<Supplier>::iterator it = suppliers.begin(); it != suppliers.end(); ++it) allSuppliers += it->getStock();
+    //for (std::vector<Supplier>::iterator it = suppliers.begin(); it != suppliers.end(); ++it) allSuppliers += it->getStock();
+}
+
+double Application::getTotalWeight(const Order &order) const {
+    double weight = 0;
+    Stock &products = order.getProducts();
+    for (int id : products.getIds()) weight += products.getQuantity(id) * this->products[id-1].getWeight();
+    return weight;
 }
 
 std::vector<Path> Application::shortestPath() {
-    sort(orders.begin(), orders.end());
+    sort(orders.begin(), orders.end(), [&](const Order &left, const Order &right) {return getTotalWeight(left) >
+            getTotalWeight(right);});
+
     sort(vehicles.begin(), vehicles.end());
 
     std::vector<Path> result;
@@ -298,14 +307,14 @@ std::vector<Path> Application::shortestPath() {
         currentCapacity = 0;
         std::vector<Order> vehicleOrders;
         for (std::vector<Order>::iterator itr = orders.begin(); itr != orders.end();) {
-            if (v.getMaxCapacity() >= itr->getProducts().getTotalWeight() + currentCapacity) {
+            if (v.getMaxCapacity() >= getTotalWeight(*itr) + currentCapacity) {
                 vehicleOrders.push_back(*itr);
-                currentCapacity += itr->getProducts().getTotalWeight();
+                currentCapacity += getTotalWeight(*itr);
                 itr = orders.erase(itr);
             }
             else itr++;
         }
-        result.push_back(graph.nearestNeighbor(centerID, vehicleOrders, this->products));
+        result.push_back(graph.nearestNeighbor(centerID, vehicleOrders));
     }
 
     reset();

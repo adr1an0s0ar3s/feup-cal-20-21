@@ -21,7 +21,3 @@ Client *Order::getOwner() const {
 Stock &Order::getProducts() const {
     return (Stock &) (this->products);
 }
-
-bool Order::operator<(const Order &o) {
-    return this->getProducts().getTotalWeight() > o.getProducts().getTotalWeight();
-}

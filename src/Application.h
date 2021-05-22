@@ -56,6 +56,8 @@ private:
 
     std::vector<Order> & filterOrders();
 
+    double getTotalWeight(const Order &order) const;
+
 public:
     Application();
 

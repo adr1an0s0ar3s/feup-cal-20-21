@@ -9,18 +9,15 @@
 class Stock {
 private:
     std::map<int, int> inventory;  // (Product Id, Quantity)
-    double totalWeight;
 
 public:
     Stock();
 
     int getQuantity(int productId) const;
 
-    double getTotalWeight() const;
-
     std::vector<int> getIds() const;
 
-    void setQuantity(int productId, int quantity, const std::vector<Product> &products);
+    void setQuantity(int productId, int quantity);
 
     bool isEmpty();
 

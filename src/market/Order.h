@@ -17,8 +17,6 @@ public:
     int getOrderId() const;
     Client * getOwner() const;
     Stock & getProducts() const;
-
-    bool operator<(const Order &o);
 };
 
 #endif //MARKET_ON_WHEELS_ORDER_H

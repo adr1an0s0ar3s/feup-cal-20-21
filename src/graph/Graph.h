@@ -155,7 +155,7 @@ public:
 	vector<Vertex<T> *> getVertexSet() const;
 	void clear();
 
-    Path nearestNeighbor(int id, std::vector<Order> orders, const std::vector<Product> &products);
+    Path nearestNeighbor(int id, std::vector<Order> orders);
 
 };
 
@@ -204,7 +204,7 @@ void Graph<T>::clear() {
 }
 
 template<class T>
-Path Graph<T>::nearestNeighbor(int id, std::vector<Order> orders, const std::vector<Product> &products) {
+Path Graph<T>::nearestNeighbor(int id, std::vector<Order> orders) {
 
     Path path;
     Vertex<T> *s;
@@ -226,13 +226,13 @@ Path Graph<T>::nearestNeighbor(int id, std::vector<Order> orders, const std::vec
         while (!q.empty()) {
             Vertex<T> *temp = q.extractMin();
 
-            if (temp->getInfo().getSupplier() != nullptr && supplyProducts(orders, temp->getInfo().getSupplier(), products)) {
+            if (temp->getInfo().getSupplier() != nullptr && supplyProducts(orders, temp->getInfo().getSupplier())) {
                 savePath(temp, path);
                 s = temp;
                 break;
             }
 
-            if (temp->getInfo().getClient() != nullptr && deliverProducts(orders, temp->getInfo().getClient(), products)) {
+            if (temp->getInfo().getClient() != nullptr && deliverProducts(orders, temp->getInfo().getClient())) {
                 savePath(temp, path);
                 s = temp;
                 break;
