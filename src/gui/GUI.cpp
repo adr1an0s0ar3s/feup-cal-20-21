@@ -11,11 +11,11 @@ GUI::GUI(const Graph<Node> * graph, int width, int height): graph(graph), width(
 
         if (vertex->getInfo().getClient() != nullptr) {         // If a vertex is a Client
             node.setLabel(vertex->getInfo().getClient()->getName());
-            node.setSize(100);
+            node.setSize(50);
             node.setColor(sf::Color::Red);
         } else if (vertex->getInfo().getSupplier() != nullptr) {  // If a vertex is a Supplier
             node.setLabel("Supplier");
-            node.setSize(100);
+            node.setSize(50);
             node.setColor(sf::Color::Green);
         } else {
             node.setSize(0);
@@ -31,7 +31,7 @@ void GUI::show(int centerId) {
     // Draw center node
     Nd &node = gv->getNode(centerId);
     node.setLabel("Center");
-    node.setSize(100);
+    node.setSize(50);
     node.setColor(sf::Color::Cyan);
 
     // Center on center node

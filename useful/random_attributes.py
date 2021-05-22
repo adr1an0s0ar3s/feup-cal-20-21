@@ -1,5 +1,5 @@
 import random
-
+"""
 usedNodes = set()
 
 # Randomizing Clients
@@ -59,7 +59,6 @@ print("Maximum number of products quantity: ", end="")
 maxQuantity = int(input())
 
 usedClients = set()
-neededProducts = {}
 
 output = open("orders.txt", "w")
 
@@ -77,7 +76,6 @@ for i in range(nOrders):
     for j in range(random.randint(1, maxProducts)):
         quantity = random.randint(1, maxQuantity)
         product = random.randint(1, nProducts)
-        neededProducts[product] = neededProducts.get(product, 0) + quantity
         output.write(f",{product} {quantity}")
     output.write(")\n")
 
@@ -96,13 +94,31 @@ for i in range(nSuppliers):
             usedNodes.add(node)
             break
     output.write(f"({i+1},{node}")
+    products = set()
     for j in range(random.randint(1, nProducts)):
-        product = list(neededProducts)[random.randint(0, len(neededProducts)-1)]
-        quantity = random.randint(1, int(neededProducts[product]))
-        neededProducts[product] = neededProducts[product] - quantity
-        if neededProducts[product] == 0:
-            neededProducts.pop(product)
+        while True:
+            product = random.randint(1, nProducts)
+            if product not in products:
+                products.add(product)
+                break;
+        quantity = random.randint(1, 10)
         output.write(f",{product} {quantity}")
     output.write(")\n")
+
+output.close()
+"""
+# Create vehicles
+
+print("Number of vehicles: ", end="")
+nVehicles = int(input())
+print("Maximum capacity: ", end="")
+maxCapacity = int(input())
+
+output = open("vehicles.txt", "w")
+
+output.write(f"{nVehicles}\n")
+
+for i in range(nVehicles):
+    output.write(f"({i+1},{random.randint(1, maxCapacity)})\n")
 
 output.close()
