@@ -277,14 +277,17 @@ void Application::setMap(const string &map) {
     loadData();
 };
 
-void Application::reset() {
-    loadOrders();
-    loadSuppliers();
-}
-
-std::vector<Order> & Application::filterOrders() {
+std::vector<Order> Application::filterOrders() const {
     Stock allSuppliers;
-    //for (std::vector<Supplier>::iterator it = suppliers.begin(); it != suppliers.end(); ++it) allSuppliers += it->getStock();
+    for (const Supplier &supplier : suppliers) allSuppliers += supplier.getStock();
+    std::vector<Order> orders;
+    for (const Order &order: this->orders) {
+        if (allSuppliers.contains(order.getProducts())) {
+            orders.push_back(order);
+            allSuppliers -= order.getProducts();
+        }
+    }
+    return orders;
 }
 
 double Application::getTotalWeight(const Order &order) const {
@@ -297,10 +300,11 @@ double Application::getTotalWeight(const Order &order) const {
 std::vector<Path> Application::shortestPath() {
     sort(orders.begin(), orders.end(), [&](const Order &left, const Order &right) {return getTotalWeight(left) >
             getTotalWeight(right);});
-
     sort(vehicles.begin(), vehicles.end());
 
     std::vector<Path> result;
+    std::vector<Order> orders = filterOrders();
+
     double currentCapacity;
 
     for (Vehicle v: vehicles) {
@@ -317,7 +321,7 @@ std::vector<Path> Application::shortestPath() {
         result.push_back(graph.nearestNeighbor(centerID, vehicleOrders));
     }
 
-    reset();
+    loadSuppliers();
 
     return result;
 }

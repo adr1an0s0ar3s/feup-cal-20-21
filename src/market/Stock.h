@@ -21,7 +21,11 @@ public:
 
     bool isEmpty();
 
-    Stock &operator+(const Stock &s);
+    bool contains(const Stock &stock) const;
+
+    Stock &operator+=(const Stock &s);
+
+    Stock &operator-=(const Stock &s);
 };
 
 #endif //MARKET_ON_WHEELS_STOCK_H

@@ -24,20 +24,27 @@ std::vector<int> Stock::getIds() const {
     return result;
 }
 
-
 void Stock::setQuantity(int productId, int quantity) {
     std::pair<std::map<int, int>::iterator , bool> result = this->inventory.insert(std::pair<int, int> (productId, quantity));
     if (!result.second) result.first->second = quantity;
-    if (quantity == 0) inventory.erase(result.first);
+    if (quantity <= 0) inventory.erase(result.first);
 }
 
 bool Stock::isEmpty() {
     return this->inventory.empty();
 }
 
-Stock & Stock::operator+(const Stock &s) {
-    /*for (int productId : s.getIds()) {
-        this->setQuantity(productId, this->getQuantity(productId) + s.getQuantity(productId), products)
-    }*/
+bool Stock::contains(const Stock &stock) const {
+    for (int id: stock.getIds()) if (this->getQuantity(id) < stock.getQuantity(id)) return false;
+    return true;
+}
+
+Stock & Stock::operator+=(const Stock &s) {
+    for (int productId : s.getIds()) this->setQuantity(productId, this->getQuantity(productId) + s.getQuantity(productId));
+    return *this;
+}
+
+Stock& Stock::operator-=(const Stock &s) {
+    for (int productId : s.getIds()) this->setQuantity(productId, this->getQuantity(productId) - s.getQuantity(productId));
     return *this;
 }

@@ -31,7 +31,7 @@ private:
         const std::string productsFile = "products.txt";
         const std::string suppliersFile = "suppliers.txt";
         const std::string vehiclesFile = "vehicles.txt";
-        std::string map = "other/GridGraphs/4x4";
+        std::string map = "espinho_strong";
     };
 
     IOFiles files;
@@ -52,9 +52,7 @@ private:
 
     bool loadData();
 
-    void reset();
-
-    std::vector<Order> & filterOrders();
+    std::vector<Order> filterOrders() const;
 
     double getTotalWeight(const Order &order) const;
 

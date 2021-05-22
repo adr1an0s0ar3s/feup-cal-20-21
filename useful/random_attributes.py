@@ -96,23 +96,13 @@ for i in range(nSuppliers):
             usedNodes.add(node)
             break
     output.write(f"({i+1},{node}")
-    if i != nSuppliers - 1:
-        products = set()
-        for j in range(random.randint(1, len(neededProducts))):
-            while True:
-                product = list(neededProducts)[random.randint(0, len(neededProducts)-1)]
-                if product not in products:
-                    products.add(product)
-                    break
-            quantity = random.randint(1, int(neededProducts[product]))
-            neededProducts[product] = neededProducts[product] - quantity
-            if neededProducts[product] == 0:
-                neededProducts.pop(product)
-            output.write(f",{product} {quantity}")
-    else:
-        temp = list(neededProducts)
-        for j in range(len(neededProducts)):
-            output.write(f",{temp[j]} {neededProducts[temp[j]]}")
+    for j in range(random.randint(1, nProducts)):
+        product = list(neededProducts)[random.randint(0, len(neededProducts)-1)]
+        quantity = random.randint(1, int(neededProducts[product]))
+        neededProducts[product] = neededProducts[product] - quantity
+        if neededProducts[product] == 0:
+            neededProducts.pop(product)
+        output.write(f",{product} {quantity}")
     output.write(")\n")
 
 output.close()
