@@ -277,6 +277,16 @@ void Application::setMap(const string &map) {
     loadData();
 };
 
+void Application::reset() {
+    loadOrders();
+    loadSuppliers();
+}
+
+std::vector<Order> & Application::filterOrders() {
+    Stock allSuppliers;
+    for (std::vector<Supplier>::iterator it = suppliers.begin(); it != suppliers.end(); ++it) allSuppliers += it->getStock();
+}
+
 std::vector<Path> Application::shortestPath() {
     sort(orders.begin(), orders.end());
     sort(vehicles.begin(), vehicles.end());
@@ -284,7 +294,7 @@ std::vector<Path> Application::shortestPath() {
     std::vector<Path> result;
     double currentCapacity;
 
-    for (Vehicle v : vehicles) {
+    for (Vehicle v: vehicles) {
         currentCapacity = 0;
         std::vector<Order> vehicleOrders;
         for (std::vector<Order>::iterator itr = orders.begin(); itr != orders.end();) {
@@ -297,5 +307,8 @@ std::vector<Path> Application::shortestPath() {
         }
         result.push_back(graph.nearestNeighbor(centerID, vehicleOrders, this->products));
     }
+
+    reset();
+
     return result;
 }

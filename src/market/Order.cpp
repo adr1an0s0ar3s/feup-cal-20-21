@@ -23,5 +23,5 @@ Stock &Order::getProducts() const {
 }
 
 bool Order::operator<(const Order &o) {
-    return this->getProducts().getTotalWeight() < o.getProducts().getTotalWeight();
+    return this->getProducts().getTotalWeight() > o.getProducts().getTotalWeight();
 }

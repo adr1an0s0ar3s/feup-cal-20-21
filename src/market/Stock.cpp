@@ -44,3 +44,9 @@ void Stock::setQuantity(int productId, int quantity, const std::vector<Product> 
 bool Stock::isEmpty() {
     return this->inventory.empty();
 }
+
+Stock & Stock::operator+(const Stock &s) {
+    for (int productId : s.getIds()) {
+        this->setQuantity(productId, this->getQuantity(productId) + s.getQuantity(productId), products)
+    }
+}

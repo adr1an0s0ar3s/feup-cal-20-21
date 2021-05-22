@@ -23,5 +23,5 @@ void Vehicle::setMaxCapacity(int newCapacity) {
 }
 
 bool Vehicle::operator<(const Vehicle &v) const {
-    return this->maxCapacity < v.getMaxCapacity();
+    return this->maxCapacity > v.getMaxCapacity();
 }

@@ -56,7 +56,7 @@ Menu * MainMenu::getNextMenu() {
 
 // --------------- Graph Menu ---------------
 
-GraphMenu::GraphMenu(Application &application) : Menu(application), gui(GUI(&application.getGraph(), 400, 400)) {}
+GraphMenu::GraphMenu(Application &application) : Menu(application), gui(GUI(&application.getGraph(), 1920, 1080)) {}
 
 void GraphMenu::show() {
     unsigned int options = 0;

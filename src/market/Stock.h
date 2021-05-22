@@ -23,6 +23,8 @@ public:
     void setQuantity(int productId, int quantity, const std::vector<Product> &products);
 
     bool isEmpty();
+
+    Stock &operator+(const Stock &s);
 };
 
 #endif //MARKET_ON_WHEELS_STOCK_H

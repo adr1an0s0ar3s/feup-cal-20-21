@@ -5,8 +5,6 @@ using Ed = GraphViewer::Edge;
 
 GUI::GUI(const Graph<Node> * graph, int width, int height): graph(graph), width(width), height(height), gv(new GraphViewer()) {
 
-    gv->setCenter(sf::Vector2f(width/2,height/2));
-
     for (Vertex<Node> *vertex: graph->getVertexSet()) {
 
         Nd &node = gv->addNode(vertex->getInfo().getNodeId(), sf::Vector2f(vertex->getInfo().getX(), vertex->getInfo().getY()));
@@ -39,7 +37,7 @@ void GUI::show(int centerId) {
     // Center on center node
     gv->setCenter(node.getPosition());
 
-    gv->createWindow();
+    gv->createWindow(width, height);
     gv->join();
     gv->closeWindow();
 

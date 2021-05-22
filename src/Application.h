@@ -52,6 +52,10 @@ private:
 
     bool loadData();
 
+    void reset();
+
+    std::vector<Order> & filterOrders();
+
 public:
     Application();
 
