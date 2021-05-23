@@ -6,6 +6,8 @@
 #include "../graph/Node.h"
 #include "../graph/Path.h"
 
+#include <Windows.h>
+
 using namespace std;
 
 /**
@@ -14,20 +16,21 @@ using namespace std;
 class GUI {
 private:
     const Graph<Node> *graph;
+    int centerID;
     GraphViewer *gv;
     int width;
     int height;
 public:
-    GUI(const Graph<Node> *graph, int width, int height);
+    GUI(const Graph<Node> *graph, int centerID, int width, int height);
+
+    bool setCenterID(int centerID);
 
     /**
      * @brief Show the full graph
-     *
-     * @param centerId id of the center
      */
-    void show(int centerId);
+    void show();
 
-    void showPaths(int centerId, const std::vector<Path> &paths);
+    void showPaths(const std::vector<Path> &paths);
 
     ~GUI();
 };

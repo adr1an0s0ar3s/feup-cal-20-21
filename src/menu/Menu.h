@@ -52,8 +52,9 @@ public:
 };
 
 class CenterMenu : public Menu {
+    GUI &gui;
 public:
-    explicit CenterMenu(Application &application);
+    explicit CenterMenu(Application &application, GUI &gui);
     void show() override;
     Menu * getNextMenu() override;
 };

@@ -18,8 +18,10 @@ int Application::getCenterId() const {
     return this->centerID;
 }
 
-void Application::setCenterId(int centerID) {
+bool Application::setCenterId(int centerID) {
+    if (graph.getVertexSet().size() < centerID) return false;
     this->centerID = centerID;
+    return true;
 }
 
 bool Application::loadNodes() {

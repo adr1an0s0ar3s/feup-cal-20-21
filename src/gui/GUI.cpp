@@ -3,7 +3,7 @@
 using Nd = GraphViewer::Node;
 using Ed = GraphViewer::Edge;
 
-GUI::GUI(const Graph<Node> * graph, int width, int height): graph(graph), width(width), height(height), gv(new GraphViewer()) {
+GUI::GUI(const Graph<Node> * graph, int centerID, int width, int height): graph(graph), centerID(centerID), width(width), height(height), gv(new GraphViewer()) {
 
     for (Vertex<Node> *vertex: graph->getVertexSet()) {
 
@@ -17,9 +17,11 @@ GUI::GUI(const Graph<Node> * graph, int width, int height): graph(graph), width(
             node.setLabel("Supplier");
             node.setSize(50);
             node.setColor(sf::Color::Green);
-        } else {
-            node.setSize(0);
-        }
+        } else if (vertex->getInfo().getNodeId() == centerID) {
+            node.setLabel("Center");
+            node.setSize(50);
+            node.setColor(sf::Color::Cyan);
+        } else node.setSize(0);
     }
 
     for (Vertex<Node> *vertex : graph->getVertexSet())
@@ -27,34 +29,58 @@ GUI::GUI(const Graph<Node> * graph, int width, int height): graph(graph), width(
             gv->addEdge(edge->getId(), gv->getNode(vertex->getInfo().getNodeId()),gv->getNode(edge->getDest()->getInfo().getNodeId()), Ed::EdgeType::DIRECTED);
 }
 
-void GUI::show(int centerId) {
-    // Draw center node
-    Nd &node = gv->getNode(centerId);
+bool GUI::setCenterID(int centerID) {
+    if (gv->getNodes().size() < centerID) return false;
+
+    // Resetting centerNode
+    Nd &node = gv->getNode(this->centerID);
+    node.setLabel();
+    node.setSize(0);
+    node.setColor();
+
+    // Updating centerNode
+    this->centerID = centerID;
+    node = gv->getNode(this->centerID);
     node.setLabel("Center");
     node.setSize(50);
     node.setColor(sf::Color::Cyan);
 
-    // Center on center node
-    gv->setCenter(node.getPosition());
+    return true;
+}
 
+void GUI::show() {
+    // Center on center node
+    gv->setCenter(gv->getNode(centerID).getPosition());
     gv->createWindow(width, height);
     gv->join();
     gv->closeWindow();
-
-    // Remove center node
-    node.setLabel("");
-    node.setSize(0);
-    node.setColor(sf::Color::Black);
 }
 
-void GUI::showPaths(int centerId, const std::vector<Path> &paths) {
+void GUI::showPaths(const std::vector<Path> &paths) {
     sf::Color colors[] = {sf::Color::Cyan, sf::Color::Red, sf::Color::Green, sf::Color::Blue, sf::Color::Magenta, sf::Color::Yellow};
+
+    gv->setCenter(gv->getNode(centerID).getPosition());
+    gv->createWindow(width, height);
+
     int color = 0;
     for (const Path &path: paths) {
-        for (int id: path.getPath()) gv->getEdge(id).setColor(colors[color]);
+        for (int id: path.getPath()) {
+            gv->lock();
+            gv->getEdge(id).setColor(colors[color]);
+            gv->unlock();
+            Sleep(5);
+            if (!gv->isWindowOpen()) {
+                gv->closeWindow();
+                for (const Path &path: paths) for (int id: path.getPath()) gv->getEdge(id).setColor(sf::Color::Black);
+                return;
+            }
+        }
         color = (color + 1) % 6;
     }
-    show(centerId);
+
+    gv->join();
+    gv->closeWindow();
+
     for (const Path &path: paths) for (int id: path.getPath()) gv->getEdge(id).setColor(sf::Color::Black);
 }
 

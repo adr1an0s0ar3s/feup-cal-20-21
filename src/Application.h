@@ -63,7 +63,7 @@ public:
 
     int getCenterId() const;
 
-    void setCenterId(int centerID);
+    bool setCenterId(int centerID);
 
     void setMap(const std::string &map);
 
