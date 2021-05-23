@@ -1,7 +1,7 @@
 #ifndef MARKET_ON_WHEELS_GUI_H
 #define MARKET_ON_WHEELS_GUI_H
 
-#include "../../lib/GraphViewerCpp/include/graphviewer.h"
+#include "graphviewer.h"
 #include "../graph/Graph.h"
 #include "../graph/Node.h"
 #include "../graph/Path.h"
