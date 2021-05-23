@@ -1,5 +1,5 @@
 import random
-"""
+
 usedNodes = set()
 
 # Randomizing Clients
@@ -106,7 +106,7 @@ for i in range(nSuppliers):
     output.write(")\n")
 
 output.close()
-"""
+
 # Create vehicles
 
 print("Number of vehicles: ", end="")
