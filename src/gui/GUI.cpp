@@ -24,9 +24,10 @@ GUI::GUI(const Graph<Node> * graph, int centerID, int width, int height): graph(
         } else node.setSize(0);
     }
 
-    for (Vertex<Node> *vertex : graph->getVertexSet())
+    for (Vertex<Node> *vertex : graph->getVertexSet()) {
         for (Edge<Node> *edge : vertex->getOutgoing())
             gv->addEdge(edge->getId(), gv->getNode(vertex->getInfo().getNodeId()),gv->getNode(edge->getDest()->getInfo().getNodeId()), Ed::EdgeType::DIRECTED);
+    }
 }
 
 bool GUI::setCenterID(int centerID) {
@@ -54,6 +55,34 @@ void GUI::show() {
     gv->createWindow(width, height);
     gv->join();
     gv->closeWindow();
+}
+
+void GUI::disableNotStrong() {
+    for (Vertex<Node> *vertex: graph->getVertexSet()) {
+        if(vertex->getInfo().getNodeId() == centerID) std::cout << "Fuck this also!\n";
+        if (!vertex->getStrong()) {
+            if(vertex->getInfo().getNodeId() == centerID) std::cout << "Fuck this!\n";
+            gv->getNode(vertex->getInfo().getNodeId()).disable();
+            for (Edge<Node> *edge: vertex->getOutgoing()) gv->getEdge(edge->getId()).disable();
+            for (Edge<Node> *edge: vertex->getIncoming()) gv->getEdge(edge->getId()).disable();
+        }
+    }
+}
+
+void GUI::enableNotStrong() {
+    for (Vertex<Node> *vertex: graph->getVertexSet()) {
+        if (!vertex->getStrong()) {
+            gv->getNode(vertex->getInfo().getNodeId()).enable();
+            for (Edge<Node> *edge: vertex->getOutgoing()) gv->getEdge(edge->getId()).enable();
+            for (Edge<Node> *edge: vertex->getIncoming()) gv->getEdge(edge->getId()).enable();
+        }
+    }
+}
+
+void GUI::showStrong() {
+    disableNotStrong();
+    show();
+    enableNotStrong();
 }
 
 void GUI::showPaths(const std::vector<Path> &paths) {

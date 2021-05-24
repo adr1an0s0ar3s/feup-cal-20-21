@@ -7,7 +7,6 @@
 
 Application::Application() {
     loadData();
-    this->centerID = 1;
 }
 
 const Graph<Node> & Application::getGraph() const {
@@ -21,6 +20,7 @@ int Application::getCenterId() const {
 bool Application::setCenterId(int centerID) {
     if (graph.getVertexSet().size() < centerID) return false;
     this->centerID = centerID;
+    graph.analyzeGraphConnectivity(this->centerID);
     return true;
 }
 
@@ -251,6 +251,8 @@ bool Application::loadData() {
         std::cout << "Failed to load edges\n";
         return false;
     }
+    setCenterId(1);
+
     if (!loadClients()) {
         std::cout << "Failed to load clients\n";
         return false;
@@ -277,6 +279,7 @@ bool Application::loadData() {
 void Application::setMap(const string &map) {
     files.map = map;
     loadData();
+    graph.analyzeGraphConnectivity(this->centerID);
 };
 
 std::vector<Order> Application::filterOrders() const {

@@ -65,11 +65,9 @@ void GraphMenu::show() {
 
     std::cout << "Graph Menu:\n\n";
     std::cout << "[" << ++options << "] " << "Change Center Node\n";
-    std::cout << "[" << ++options << "] " << "Show Current POI'S\n";
     std::cout << "[" << ++options << "] " << "Show Full Graph\n";
-    std::cout << "[" << ++options << "] " << "Show Shortest Path\n";
-    std::cout << "[" << ++options << "] " << "Show Path with Latest Departure Time\n";
-    std::cout << "[" << ++options << "] " << "Show Connectivity\n";
+    std::cout << "[" << ++options << "] " << "Show Shortest Path (One vehicle with unlimited capacity)\n";
+    std::cout << "[" << ++options << "] " << "Show Shortest Path (Several vehicles with limited capacity)\n";
     std::cout << "[" << ++options << "] " << "Show Connectivity from Origin\n";
     std::cout << "\n[0] Exit\n";
 }
@@ -81,12 +79,10 @@ Menu * GraphMenu::getNextMenu() {
     switch(option){
         case 0: return nullptr;
         case 1: return new CenterMenu(application, gui);
-        case 2: return this;
-        case 3: gui.show(); break;
-        case 4: gui.showPaths(application.shortestPath());
-        case 5: return this;
-        case 6: return this;
-        case 7: return this;
+        case 2: gui.show(); break;
+        case 3: break;
+        case 4: gui.showPaths(application.shortestPath()); break;
+        case 5: gui.showStrong(); break;
         default: return invalidOption();
     }
     return this;

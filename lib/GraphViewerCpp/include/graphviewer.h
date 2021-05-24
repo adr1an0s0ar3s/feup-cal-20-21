@@ -1,5 +1,5 @@
-#ifndef _GRAPH_VIEWER_H_
-#define _GRAPH_VIEWER_H_
+#ifndef GRAPH_VIEWER_H
+#define GRAPH_VIEWER_H
 
 #include <string>
 #include <thread>
@@ -10,6 +10,7 @@
 #include "fpsmonitor.h"
 
 #include <SFML/Graphics.hpp>
+#include <condition_variable>
 
 /**
  * @brief Class to save and represent a graph.
@@ -52,7 +53,7 @@ public:
         id_t id;                                    ///< @brief Node ID.
         sf::Vector2f position;                      ///< @brief Node position.
         float size = 10.0;                          ///< @brief Node size.
-        std::string label = "";                     ///< @brief Node label.
+        std::string label;                          ///< @brief Node label.
         sf::Color color = sf::Color::Red;           ///< @brief Node color.
         sf::Texture icon;                           ///< @brief Node icon.
         bool isIcon = false;                        ///< @brief True if node is icon, false otherwise.
@@ -71,16 +72,12 @@ public:
 
     private:
         /**
-         * @brief Construct a new Node object
-         */
-        Node();
-        /**
          * @brief Construct a new Node object with ID and position
          * 
          * @param id        Unique node ID
          * @param position  Node position in the window, in pixels
          */
-        Node(id_t id, const sf::Vector2f &position);
+        explicit Node(id_t id, const sf::Vector2f &position);
     
     public:
         /**
@@ -273,7 +270,7 @@ public:
         Node *u = nullptr;                  ///< @brief Edge origin node.
         Node *v = nullptr;                  ///< @brief Edge destination node.
         EdgeType edge_type;                 ///< @brief Edge type.
-        std::string label = "";             ///< @brief Edge label.
+        std::string label;                  ///< @brief Edge label.
         sf::Color color = sf::Color::Black; ///< @brief Edge color.
         bool dashed = false;                ///< @brief True if edge is dashed, false if full.
         float thickness = 5.0;              ///< @brief Edge thickness, in pixels.
@@ -290,10 +287,6 @@ public:
 
     private:
         /**
-         * @brief Construct a new Edge object
-         */
-        Edge();
-        /**
          * @brief Construct a new Edge object with ID, origin/destination nodes
          *        and direction.
          * 
@@ -302,7 +295,7 @@ public:
          * @param v             Pointer to destination node
          * @param edge_type     Edge type (directed or undirected)
          */
-        Edge(id_t id, Node &u, Node &v, EdgeType edge_type = UNDIRECTED);
+        explicit Edge(id_t id, Node &u, Node &v, EdgeType edge_type = UNDIRECTED);
         
     public:
         /**
@@ -499,10 +492,13 @@ public:
     };
     
 public:
+    static const int DEFAULT_WIDTH  = 800;
+    static const int DEFAULT_HEIGHT = 600;
+
     /**
      * @brief Construct a new graph.
      */
-    GraphViewer();
+    explicit GraphViewer();
 
     /**
      * @brief Create the visualization window.
@@ -510,9 +506,9 @@ public:
      * @param width Window width (in pixels)
      * @param height Window height (in pixels)
      */
-    void createWindow(unsigned int width = 800, unsigned int height = 600);
+    void createWindow(unsigned int width = DEFAULT_WIDTH, unsigned int height = DEFAULT_HEIGHT);
 
-    bool isWindowOpen();
+    bool isWindowOpen() const;
 
     /**
      * @brief Close visualization window.
@@ -523,9 +519,9 @@ public:
 
     const sf::Vector2f& getCenter() const;
 
-    void setScale(double scale);
+    void setScale(float scale);
 
-    double getScale() const;
+    float getScale() const;
 
     /**
      * @brief Add node.
@@ -725,7 +721,8 @@ private:
     sf::View *debug_view = nullptr;             ///< @brief Debug view, to draw debug information.
     std::thread *main_thread = nullptr;         ///< @brief Main thread.
     bool windowOpen = false;
-    std::mutex windowInitialization;            ///< @brief Mutex: createWindow only returns once window is created.
+    std::condition_variable isWindowOpenCV;     ///< @brief Condition variable to check if window is open.
+    std::mutex isWindowOpenCVMutex;             ///< @brief Mutex of isWindowOpenCV condition variable.
 
     bool enabledNodes     = true;               ///< @brief Node drawing enabled.
     bool enabledNodesText = true;               ///< @brief Node text drawing enabled.
@@ -765,7 +762,7 @@ private:
      * @brief Mutex protecting structures that are being drawn and that can
      * be updated by another thread at the same time.
      */
-    std::mutex graphMutex;
+    mutable std::mutex graphMutex;
     std::unordered_map<id_t, Node*> nodes;   ///< @brief Nodes map.
     std::unordered_map<id_t, Edge*> edges;   ///< @brief Edges map.
 
@@ -804,14 +801,14 @@ private:
     /**
      * @brief Window width.
      */
-    unsigned int width;
+    unsigned int width = DEFAULT_WIDTH;
 
     /**
      * @brief Window height.
      */
-    unsigned int height;
+    unsigned int height = DEFAULT_HEIGHT;
 };
 
 #include "lines.h"
 
-#endif
+#endif // GRAPH_VIEWER_H

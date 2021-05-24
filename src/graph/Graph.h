@@ -9,10 +9,12 @@
 #include <queue>
 #include <limits>
 #include <iostream>
+#include <algorithm>
 #include "MutablePriorityQueue.h"
 #include "../util/Utils.h"
 #include "../market/Order.h"
 #include "Path.h"
+#include "Node.h"
 
 using namespace std;
 
@@ -41,6 +43,8 @@ private:
 	double dist;   // for path finding
 	int queueIndex = 0; // required by MutablePriorityQueue
 
+	bool strong;
+
 	Vertex(T info);
 	void addEdge(Edge<T> *e);
 	bool operator<(Vertex<T> &vertex) const; // required by MutablePriorityQueue
@@ -52,6 +56,7 @@ public:
 	vector<Edge<T> *> getIncoming() const;
 	vector<Edge<T> *> getOutgoing() const;
 	Edge<T> * getPath() const;
+	bool getStrong() const;
 	friend class Graph<T>;
 	friend class MutablePriorityQueue<Vertex<T>>;
 
@@ -83,6 +88,9 @@ vector<Edge<T> *>  Vertex<T>::getOutgoing() const {return this->outgoing;}
 
 template <class T>
 Edge<T> * Vertex<T>::getPath() const {return path;}
+
+template <class T>
+bool Vertex<T>::getStrong() const {return strong;}
 
 /*
  * ================================================================================================
@@ -155,7 +163,9 @@ public:
 	vector<Vertex<T> *> getVertexSet() const;
 	void clear();
 
-    Path nearestNeighbor(int id, std::vector<Order> orders);
+    Path nearestNeighbor(int centerID, std::vector<Order> orders);
+    void analyzeGraphConnectivity(int centerID);
+    void dfsVisitReverse(Vertex<T> *v, std::vector<T> & res) const;
 
 };
 
@@ -204,11 +214,11 @@ void Graph<T>::clear() {
 }
 
 template<class T>
-Path Graph<T>::nearestNeighbor(int id, std::vector<Order> orders) {
+Path Graph<T>::nearestNeighbor(int centerID, std::vector<Order> orders) {
 
     Path path;
     Vertex<T> *s;
-    if ((s = getVertex(id - 1)) == nullptr) return path;
+    if ((s = getVertex(centerID - 1)) == nullptr) return path;
 
     while (!orders.empty()) {
 
@@ -268,6 +278,25 @@ void Graph<T>::savePath(Vertex<T> *v, Path &path) const {
     }
 }
 
+template <class T>
+void Graph<T>::analyzeGraphConnectivity(int centerID) {
+    std::vector<T> forest = dfs();
+    for (Vertex<T> *v : vertexSet) {
+        v->visited = false;
+        v->strong = false;
+    }
+    std::vector<T> res;
+    for (typename std::vector<T>::reverse_iterator it = forest.rbegin(); it != forest.rend(); ++it) {
+        Vertex<T> *s = findVertex(*it);
+        if (!s->visited) {
+            res.clear();
+            dfsVisitReverse(s, res);
+            if (find(res.begin(), res.end(), getVertex(centerID - 1)->getInfo()) != res.end()) break;
+        }
+    }
+    for (T info: res) findVertex(info)->strong = true;
+}
+
 /*
  * Performs a depth-first search (dfs) in a graph (this).
  * Returns a vector with the contents of the vertices by dfs order.
@@ -290,9 +319,15 @@ std::vector<T> Graph<T>::dfs() const {
 template <class T>
 void Graph<T>::dfsVisit(Vertex<T> *v, std::vector<T> & res) const {
     v->visited = true;
+    for (Edge<T> *edge: v->outgoing) if (!edge->dest->visited) dfsVisit(edge->dest, res);
     res.push_back(v->info);
-    for (Edge<T> *edge: v->outgoing)
-        if (!edge->dest->visited) dfsVisit(edge->dest, res);
+}
+
+template <class T>
+void Graph<T>::dfsVisitReverse(Vertex<T> *v, std::vector<T> & res) const {
+    v->visited = true;
+    for (Edge<T> *edge: v->incoming) if (!edge->orig->visited) dfsVisitReverse(edge->orig, res);
+    res.push_back(v->info);
 }
 
 #endif /* GRAPH_H_ */

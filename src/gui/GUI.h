@@ -15,11 +15,16 @@ using namespace std;
  */
 class GUI {
 private:
+
     const Graph<Node> *graph;
     int centerID;
     GraphViewer *gv;
     int width;
     int height;
+
+    void disableNotStrong();
+    void enableNotStrong();
+
 public:
     GUI(const Graph<Node> *graph, int centerID, int width, int height);
 
@@ -29,6 +34,8 @@ public:
      * @brief Show the full graph
      */
     void show();
+
+    void showStrong();
 
     void showPaths(const std::vector<Path> &paths);
 

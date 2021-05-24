@@ -31,7 +31,7 @@ private:
         const std::string productsFile = "products.txt";
         const std::string suppliersFile = "suppliers.txt";
         const std::string vehiclesFile = "vehicles.txt";
-        std::string map = "espinho_strong";
+        std::string map = "espinho_full";
     };
 
     IOFiles files;
