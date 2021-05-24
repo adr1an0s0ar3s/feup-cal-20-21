@@ -18,7 +18,7 @@ int Application::getCenterId() const {
 }
 
 bool Application::setCenterId(int centerID) {
-    if (graph.getVertexSet().size() < centerID) return false;
+    if (graph.getVertexSet().size() < centerID || graph.getVertex(centerID - 1)->getInfo().getClient() != nullptr || graph.getVertex(centerID - 1)->getInfo().getSupplier() != nullptr) return false;
     this->centerID = centerID;
     graph.analyzeGraphConnectivity(this->centerID);
     return true;

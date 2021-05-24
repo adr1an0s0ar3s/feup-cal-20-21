@@ -32,19 +32,20 @@ GUI::GUI(const Graph<Node> * graph, int centerID, int width, int height): graph(
 
 bool GUI::setCenterID(int centerID) {
     if (gv->getNodes().size() < centerID) return false;
+    Nd &node2 = gv->getNode(centerID);
+    if (node2.getLabel() != "") return false;
 
     // Resetting centerNode
-    Nd &node = gv->getNode(this->centerID);
-    node.setLabel();
-    node.setSize(0);
-    node.setColor();
+    Nd &node1 = gv->getNode(this->centerID);
+    node1.setLabel();
+    node1.setSize(0);
+    node1.setColor();
 
     // Updating centerNode
     this->centerID = centerID;
-    node = gv->getNode(this->centerID);
-    node.setLabel("Center");
-    node.setSize(50);
-    node.setColor(sf::Color::Cyan);
+    node2.setLabel("Center");
+    node2.setSize(50);
+    node2.setColor(sf::Color::Cyan);
 
     return true;
 }
@@ -59,9 +60,7 @@ void GUI::show() {
 
 void GUI::disableNotStrong() {
     for (Vertex<Node> *vertex: graph->getVertexSet()) {
-        if(vertex->getInfo().getNodeId() == centerID) std::cout << "Fuck this also!\n";
         if (!vertex->getStrong()) {
-            if(vertex->getInfo().getNodeId() == centerID) std::cout << "Fuck this!\n";
             gv->getNode(vertex->getInfo().getNodeId()).disable();
             for (Edge<Node> *edge: vertex->getOutgoing()) gv->getEdge(edge->getId()).disable();
             for (Edge<Node> *edge: vertex->getIncoming()) gv->getEdge(edge->getId()).disable();
