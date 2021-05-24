@@ -67,9 +67,9 @@ public:
 
     void setMap(const std::string &map);
 
-    std::vector<Path> shortestPathUnlimited();
+    std::vector<Path> shortestPathUnlimited(bool displayTime);
 
-    std::vector<Path> shortestPathLimited();
+    std::vector<Path> shortestPathLimited(bool displayTime);
 };
 
 #endif //MARKET_ON_WHEELS_APPLICATION_H

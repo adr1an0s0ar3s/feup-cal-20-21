@@ -21,3 +21,9 @@ double Path::getLength() const {
 void Path::addEdge(int nodeId) {
     this->path.push_back(nodeId);
 }
+
+Path operator+(Path left, const Path &right) {
+    left.path.insert(left.path.end(), right.path.begin(), right.path.end());
+    left.length += right.length;
+    return left;
+}

@@ -14,6 +14,7 @@ public:
     std::list<int> getPath() const;
     double getLength() const;
     void addEdge(int nodeId);
+    friend Path operator+(Path left, const Path &right);
 };
 
 #endif //MARKET_ON_WHEELS_PATH_H

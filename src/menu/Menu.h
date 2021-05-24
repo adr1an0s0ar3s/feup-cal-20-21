@@ -1,11 +1,18 @@
 #ifndef MARKET_ON_WHEELS_MENU_H
 #define MARKET_ON_WHEELS_MENU_H
 
+#include <stdlib.h>
 #include "../Application.h"
 #include "../gui/GUI.h"
 #include "../graph/Node.h"
 
-#define CLR_SCREEN "\033[2J\033[1;1H"
+#ifdef __linux__
+    #define CLR_SCREEN "\033[2J\033[1;1H"
+#elif _WIN32
+    #define CLR_SCREEN "\033[2J\033[1;1H"
+#else
+    #define CLR_SCREEN "\033[2J\033[1;1H"
+#endif
 
 class Menu{
 protected:

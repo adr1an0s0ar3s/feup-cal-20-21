@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+#include <chrono>
 
 Application::Application() {
     loadData();
@@ -246,7 +247,9 @@ bool Application::loadVehicles() {
 
 bool Application::loadData() {
     std::cout << "Loading data...\n\n";
+
     graph.clear();
+
     if (!loadNodes()) {
         std::cout << "Failed to load nodes\n";
         return false;
@@ -255,6 +258,7 @@ bool Application::loadData() {
         std::cout << "Failed to load edges\n";
         return false;
     }
+
     setCenterId(1);
 
     if (!loadClients()) {
@@ -277,6 +281,7 @@ bool Application::loadData() {
         std::cout << "Failed to load vehicles\n";
         return false;
     }
+
     return true;
 }
 
@@ -306,25 +311,39 @@ double Application::getTotalWeight(const Order &order) const {
     return weight;
 }
 
-std::vector<Path> Application::shortestPathUnlimited() {
+std::vector<Path> Application::shortestPathUnlimited(bool displayTime) {
     std::vector<Path> result;
-    std::vector<Order> orders = filterOrders();
 
-    result.push_back(graph.nearestNeighbor(centerID, orders));
+    auto start = std::chrono::high_resolution_clock::now();
+
+    std::vector<Order> orders = filterOrders();
+    Path delivery = graph.nearestNeighbor(centerID, orders);
+    Path comeback = graph.bidirectionalDijkstra(graph.getEdge(delivery.getPath().back())->getDest()->getInfo().getNodeId(), centerID);
+    result.push_back(delivery + comeback);
+
+    auto finish = std::chrono::high_resolution_clock::now();
+    if (displayTime) {
+        auto milli = std::chrono::duration_cast<std::chrono::milliseconds>(finish - start).count();
+        std::cout << "The algorithm took " << milli << " milliseconds to run.\n";
+    }
 
     loadSuppliers();
 
     return result;
 }
 
-std::vector<Path> Application::shortestPathLimited() {
+std::vector<Path> Application::shortestPathLimited(bool displayTime) {
     std::vector<Path> result;
+
+    auto start = std::chrono::high_resolution_clock::now();
+
     std::vector<Order> orders = filterOrders();
 
     double currentCapacity;
 
     for (Vehicle v: vehicles) {
         currentCapacity = 0;
+        std::cout << "APP: 1\n";
         std::vector<Order> vehicleOrders;
         for (std::vector<Order>::iterator itr = orders.begin(); itr != orders.end();) {
             if (v.getMaxCapacity() >= getTotalWeight(*itr) + currentCapacity) {
@@ -334,7 +353,19 @@ std::vector<Path> Application::shortestPathLimited() {
             }
             else itr++;
         }
-        result.push_back(graph.nearestNeighbor(centerID, vehicleOrders));
+        std::cout << "APP: 2\n";
+        Path delivery = graph.nearestNeighbor(centerID, orders);
+        std::cout << "APP: 3\n";
+        //Path comeback = graph.bidirectionalDijkstra(graph.getEdge(delivery.getPath().back())->getDest()->getInfo().getNodeId(), centerID);
+        std::cout << "APP: 4\n";
+        result.push_back(delivery);
+        std::cout << "APP: 5\n";
+    }
+
+    auto finish = std::chrono::high_resolution_clock::now();
+    if (displayTime) {
+        auto milli = std::chrono::duration_cast<std::chrono::milliseconds>(finish - start).count();
+        std::cout << "The algorithm took " << milli << " milliseconds to run.\n";
     }
 
     loadSuppliers();

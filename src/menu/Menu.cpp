@@ -1,6 +1,8 @@
 #include "Menu.h"
 #include "../util/Input.h"
 
+#define DISPLAY_TIME true
+
 Menu::Menu(Application &application) : application(application) {}
 
 Menu * Menu::invalidOption() {
@@ -80,8 +82,8 @@ Menu * GraphMenu::getNextMenu() {
         case 0: return nullptr;
         case 1: return new CenterMenu(application, gui);
         case 2: gui.show(); break;
-        case 3: gui.showPaths(application.shortestPathUnlimited()); break;
-        case 4: gui.showPaths(application.shortestPathLimited()); break;
+        case 3: gui.showPaths(application.shortestPathUnlimited(DISPLAY_TIME)); break;
+        case 4: gui.showPaths(application.shortestPathLimited(DISPLAY_TIME)); break;
         case 5: gui.showStrong(); break;
         default: return invalidOption();
     }
