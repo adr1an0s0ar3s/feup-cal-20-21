@@ -318,7 +318,7 @@ std::vector<Path> Application::shortestPathUnlimited(bool displayTime) {
 
     std::vector<Order> orders = filterOrders();
     Path delivery = graph.nearestNeighbor(centerID, orders);
-    Path comeback = graph.bidirectionalDijkstra(graph.getEdge(delivery.getPath().back())->getDest()->getInfo().getNodeId(), centerID);
+    Path comeback = graph.dijkstra(graph.getEdge(delivery.getPath().back())->getDest()->getInfo().getNodeId(), centerID);
     result.push_back(delivery + comeback);
 
     auto finish = std::chrono::high_resolution_clock::now();
@@ -343,7 +343,6 @@ std::vector<Path> Application::shortestPathLimited(bool displayTime) {
 
     for (Vehicle v: vehicles) {
         currentCapacity = 0;
-        std::cout << "APP: 1\n";
         std::vector<Order> vehicleOrders;
         for (std::vector<Order>::iterator itr = orders.begin(); itr != orders.end();) {
             if (v.getMaxCapacity() >= getTotalWeight(*itr) + currentCapacity) {
@@ -355,9 +354,6 @@ std::vector<Path> Application::shortestPathLimited(bool displayTime) {
         }
         Path delivery = graph.nearestNeighbor(centerID, vehicleOrders);
         Path comeback = graph.dijkstra(graph.getEdge(delivery.getPath().back())->getDest()->getInfo().getNodeId(), centerID);
-        std::cout << comeback.getPath().size() << std::endl;
-        std::cout << graph.getEdge(delivery.getPath().back())->getDest()->getInfo().getNodeId() << std::endl;
-        std::cout << graph.getEdge(delivery.getPath().back())->getDest()->getInfo().getClient()->getName() << " " << graph.getEdge(comeback.getPath().back())->getDest()->getInfo().getNodeId() << std::endl;
         result.push_back(delivery + comeback);
     }
 
