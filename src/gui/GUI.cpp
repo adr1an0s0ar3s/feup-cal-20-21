@@ -26,7 +26,7 @@ GUI::GUI(const Graph<Node> * graph, int centerID, int width, int height): graph(
 
     for (Vertex<Node> *vertex : graph->getVertexSet()) {
         for (Edge<Node> *edge : vertex->getOutgoing())
-            gv->addEdge(edge->getId(), gv->getNode(vertex->getInfo().getNodeId()),gv->getNode(edge->getDest()->getInfo().getNodeId()), Ed::EdgeType::DIRECTED);
+            gv->addEdge(edge->getId(), gv->getNode(vertex->getInfo().getNodeId()),gv->getNode(edge->getDest()->getInfo().getNodeId()), Ed::EdgeType::DIRECTED).setThickness(2);
     }
 }
 
@@ -85,7 +85,9 @@ void GUI::showStrong() {
 }
 
 void GUI::showPaths(const std::vector<Path> &paths) {
-    sf::Color colors[] = {sf::Color::Cyan, sf::Color::Red, sf::Color::Green, sf::Color::Blue, sf::Color::Magenta, sf::Color::Yellow};
+    sf::Color colors[] = {sf::Color::Red, sf::Color::Green, sf::Color::Blue, sf::Color::Magenta};
+
+    disableNotStrong();
 
     gv->setCenter(gv->getNode(centerID).getPosition());
     gv->createWindow(width, height);
@@ -94,22 +96,38 @@ void GUI::showPaths(const std::vector<Path> &paths) {
     for (const Path &path: paths) {
         for (int id: path.getPath()) {
             gv->lock();
-            gv->getEdge(id).setColor(colors[color]);
+            Ed &edge = gv->getEdge(id);
+            edge.setColor(colors[color]);
+            edge.setThickness(5);
             gv->unlock();
             Sleep(5);
             if (!gv->isWindowOpen()) {
                 gv->closeWindow();
-                for (const Path &path: paths) for (int id: path.getPath()) gv->getEdge(id).setColor(sf::Color::Black);
+                for (const Path &path: paths) {
+                    for (int id: path.getPath()) {
+                        Ed &edge = gv->getEdge(id);
+                        edge.setColor(sf::Color::Black);
+                        edge.setThickness(2);
+                    }
+                }
                 return;
             }
         }
-        color = (color + 1) % 6;
+        color = (color + 1) % 4;
     }
 
     gv->join();
     gv->closeWindow();
 
-    for (const Path &path: paths) for (int id: path.getPath()) gv->getEdge(id).setColor(sf::Color::Black);
+    enableNotStrong();
+
+    for (const Path &path: paths) {
+        for (int id: path.getPath()) {
+            Ed &edge = gv->getEdge(id);
+            edge.setColor(sf::Color::Black);
+            edge.setThickness(2);
+        }
+    }
 }
 
 GUI::~GUI() {
