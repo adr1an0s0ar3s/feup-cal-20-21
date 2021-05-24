@@ -141,6 +141,8 @@ bool Application::loadOrders() {
     }
 
     file.close();
+    sort(orders.begin(), orders.end(), [&](const Order &left, const Order &right) {return getTotalWeight(left) >
+                                                                                          getTotalWeight(right);});
     return true;
 }
 
@@ -238,10 +240,12 @@ bool Application::loadVehicles() {
     }
 
     file.close();
+    sort(vehicles.begin(), vehicles.end());
     return true;
 }
 
 bool Application::loadData() {
+    std::cout << "Loading data...\n\n";
     graph.clear();
     if (!loadNodes()) {
         std::cout << "Failed to load nodes\n";
@@ -284,10 +288,10 @@ void Application::setMap(const string &map) {
 
 std::vector<Order> Application::filterOrders() const {
     Stock allSuppliers;
-    for (const Supplier &supplier : suppliers) allSuppliers += supplier.getStock();
+    for (const Supplier &supplier : suppliers) if (graph.getVertex(supplier.getNodeId() - 1)->getStrong()) allSuppliers += supplier.getStock();
     std::vector<Order> orders;
     for (const Order &order: this->orders) {
-        if (allSuppliers.contains(order.getProducts())) {
+        if (graph.getVertex(order.getOwner()->getNodeId() - 1)->getStrong() && allSuppliers.contains(order.getProducts())) {
             orders.push_back(order);
             allSuppliers -= order.getProducts();
         }
@@ -302,11 +306,18 @@ double Application::getTotalWeight(const Order &order) const {
     return weight;
 }
 
-std::vector<Path> Application::shortestPath() {
-    sort(orders.begin(), orders.end(), [&](const Order &left, const Order &right) {return getTotalWeight(left) >
-            getTotalWeight(right);});
-    sort(vehicles.begin(), vehicles.end());
+std::vector<Path> Application::shortestPathUnlimited() {
+    std::vector<Path> result;
+    std::vector<Order> orders = filterOrders();
 
+    result.push_back(graph.nearestNeighbor(centerID, orders));
+
+    loadSuppliers();
+
+    return result;
+}
+
+std::vector<Path> Application::shortestPathLimited() {
     std::vector<Path> result;
     std::vector<Order> orders = filterOrders();
 

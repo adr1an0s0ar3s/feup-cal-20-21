@@ -236,6 +236,8 @@ Path Graph<T>::nearestNeighbor(int centerID, std::vector<Order> orders) {
         while (!q.empty()) {
             Vertex<T> *temp = q.extractMin();
 
+            if (!temp->getStrong()) continue;
+
             if (temp->getInfo().getSupplier() != nullptr && supplyProducts(orders, temp->getInfo().getSupplier())) {
                 savePath(temp, path);
                 s = temp;

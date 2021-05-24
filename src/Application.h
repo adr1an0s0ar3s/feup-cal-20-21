@@ -31,7 +31,7 @@ private:
         const std::string productsFile = "products.txt";
         const std::string suppliersFile = "suppliers.txt";
         const std::string vehiclesFile = "vehicles.txt";
-        std::string map = "espinho_full";
+        std::string map = "espinho_strong";
     };
 
     IOFiles files;
@@ -67,7 +67,9 @@ public:
 
     void setMap(const std::string &map);
 
-    std::vector<Path> shortestPath();
+    std::vector<Path> shortestPathUnlimited();
+
+    std::vector<Path> shortestPathLimited();
 };
 
 #endif //MARKET_ON_WHEELS_APPLICATION_H

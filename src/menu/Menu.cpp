@@ -80,8 +80,8 @@ Menu * GraphMenu::getNextMenu() {
         case 0: return nullptr;
         case 1: return new CenterMenu(application, gui);
         case 2: gui.show(); break;
-        case 3: break;
-        case 4: gui.showPaths(application.shortestPath()); break;
+        case 3: gui.showPaths(application.shortestPathUnlimited()); break;
+        case 4: gui.showPaths(application.shortestPathLimited()); break;
         case 5: gui.showStrong(); break;
         default: return invalidOption();
     }
