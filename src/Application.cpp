@@ -353,13 +353,12 @@ std::vector<Path> Application::shortestPathLimited(bool displayTime) {
             }
             else itr++;
         }
-        std::cout << "APP: 2\n";
-        Path delivery = graph.nearestNeighbor(centerID, orders);
-        std::cout << "APP: 3\n";
-        //Path comeback = graph.bidirectionalDijkstra(graph.getEdge(delivery.getPath().back())->getDest()->getInfo().getNodeId(), centerID);
-        std::cout << "APP: 4\n";
-        result.push_back(delivery);
-        std::cout << "APP: 5\n";
+        Path delivery = graph.nearestNeighbor(centerID, vehicleOrders);
+        Path comeback = graph.dijkstra(graph.getEdge(delivery.getPath().back())->getDest()->getInfo().getNodeId(), centerID);
+        std::cout << comeback.getPath().size() << std::endl;
+        std::cout << graph.getEdge(delivery.getPath().back())->getDest()->getInfo().getNodeId() << std::endl;
+        std::cout << graph.getEdge(delivery.getPath().back())->getDest()->getInfo().getClient()->getName() << " " << graph.getEdge(comeback.getPath().back())->getDest()->getInfo().getNodeId() << std::endl;
+        result.push_back(delivery + comeback);
     }
 
     auto finish = std::chrono::high_resolution_clock::now();

@@ -168,6 +168,7 @@ public:
 
     Path nearestNeighbor(int centerID, std::vector<Order> orders);
     void analyzeGraphConnectivity(int centerID);
+    Path dijkstra(int sourc, int dest);
     Path bidirectionalDijkstra(int sourc, int dest);
 
 };
@@ -234,7 +235,7 @@ Path Graph<T>::nearestNeighbor(int centerID, std::vector<Order> orders) {
 
     while (!orders.empty()) {
 
-        std::cout << "Still has orders\n";
+        //std::cout << "Still has orders\n";
 
         for (Vertex<T> *v: vertexSet) {
             v->dist = INF;
@@ -250,11 +251,11 @@ Path Graph<T>::nearestNeighbor(int centerID, std::vector<Order> orders) {
         while (!q.empty()) {
             Vertex<T> *temp = q.extractMin();
 
-            std::cout << "Extracted min: " << ((Node) temp->getInfo()).getNodeId() << std::endl;
+            //std::cout << "Extracted min: " << ((Node) temp->getInfo()).getNodeId() << std::endl;
 
             if (!temp->getStrong()) continue;
 
-            std::cout << "Is strong\n";
+            //std::cout << "Is strong\n";
 
             if (temp->getInfo().getSupplier() != nullptr && supplyProducts(orders, temp->getInfo().getSupplier())) {
                 savePath(temp, path);
@@ -262,7 +263,7 @@ Path Graph<T>::nearestNeighbor(int centerID, std::vector<Order> orders) {
                 break;
             }
 
-            std::cout << "No viable supplier\n";
+            //std::cout << "No viable supplier\n";
 
             if (temp->getInfo().getClient() != nullptr && deliverProducts(orders, temp->getInfo().getClient())) {
                 savePath(temp, path);
@@ -270,7 +271,7 @@ Path Graph<T>::nearestNeighbor(int centerID, std::vector<Order> orders) {
                 break;
             }
 
-            std::cout << "No viable client\n";
+            //std::cout << "No viable client\n";
 
             for (Edge<T> *e: temp->outgoing) {
                 if (e->dest->dist > temp->dist + e->weight) {
@@ -283,10 +284,50 @@ Path Graph<T>::nearestNeighbor(int centerID, std::vector<Order> orders) {
                 }
             }
 
-            std::cout << "Updated values of node, and put back to queue\n";
+            //std::cout << "Updated values of node, and put back to queue\n";
         }
     }
 
+    return path;
+}
+
+template<class T>
+Path Graph<T>::dijkstra(int sourc, int dest) {
+
+    Path path;
+    Vertex<T> *s = getVertex(sourc-1), *d = getVertex(dest-1);
+    if (s == nullptr || d == nullptr) return path;
+
+    for (Vertex<T> *v: vertexSet) {
+        v->dist = INF;
+        v->path = nullptr;
+        v->visited = false;
+    }
+
+    s->dist = 0;
+
+    MutablePriorityQueue<Vertex<T>> q;
+
+    q.insert(s);
+
+    while (!q.empty()) {
+        Vertex<T> *v = q.extractMin();
+
+        if (!v->getStrong()) continue;
+
+        for (Edge<T> *e: v->outgoing) {
+            if (e->dest->dist > v->dist + e->weight) {
+                e->dest->dist = v->dist + e->weight;
+                e->dest->path = e;
+                if (!e->dest->visited) {
+                    e->dest->visited = true;
+                    q.insert(e->dest);
+                } else q.decreaseKey(e->dest);
+            }
+        }
+    }
+
+    savePath(d, path);
     return path;
 }
 
@@ -319,6 +360,19 @@ Path Graph<T>::bidirectionalDijkstra(int sourc, int dest) {
         Vertex<T> *v = q.extractMin();
         Vertex<T> *u = qr.extractMin();
 
+        for (Edge<T> *e: u->incoming) {
+            if (done) break;
+            if (e->orig->dist > u->dist + e->weight) {
+                e->orig->dist = u->dist + e->weight;
+                e->dest->path = e;
+                if (e->orig->visited) done = true;
+                else if (!e->orig->visitedReverse) {
+                    e->orig->visitedReverse = true;
+                    qr.insert(e->orig);
+                } else qr.decreaseKey(e->orig);
+            }
+        }
+
         for (Edge<T> *e: v->outgoing) {
             if (done) break;
             if (e->dest->dist > v->dist + e->weight) {
@@ -331,22 +385,9 @@ Path Graph<T>::bidirectionalDijkstra(int sourc, int dest) {
                 } else q.decreaseKey(e->dest);
             }
         }
-
-        for (Edge<T> *e: u->incoming) {
-            if (done) break;
-            if (e->orig->dist > u->dist + e->weight) {
-                e->orig->dist = u->dist + e->weight;
-                e->dest->path = e;
-                if (e->dest->visited) done = true;
-                else if (!e->orig->visitedReverse) {
-                    e->orig->visitedReverse = true;
-                    qr.insert(e->orig);
-                } else qr.decreaseKey(e->orig);
-            }
-        }
     }
 
-    savePath(s, path);
+    savePath(d, path);
     return path;
 }
 
