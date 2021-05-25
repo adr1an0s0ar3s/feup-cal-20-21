@@ -39,12 +39,12 @@ private:
 	vector<Edge<T> *> incoming;
 
 	bool visited;  // for path finding
-	bool visitedReverse;
+	bool visitedReverse;    // for bidirectionalDijkstra
 	Edge<T> *path; // for path finding
 	double dist;   // for path finding
 	int queueIndex = 0; // required by MutablePriorityQueue
 
-	bool strong;
+	bool strong;    // for connectivity
 
 	Vertex(T info);
 	void addEdge(Edge<T> *e);
@@ -151,9 +151,31 @@ private:
 
 	vector<Vertex<T> *> vertexSet;
 
+    /**
+     * Performs a depth-first search (dfs) in a graph (this)
+     * @return A vector with the contents of the vertices by dfs order
+     */
     std::vector<T> dfs() const;
+
+    /**
+     * Auxiliary function that visits a vertex (v) and its adjacent not yet visited, recursively
+     * @param v Pointer to initial vertex
+     * @param res Updates it with the list of visited node contents
+     */
     void dfsVisit(Vertex<T> *v, std::vector<T> & res) const;
+
+    /**
+     * Auxiliary function that visits a vertex (v) and its adjacent not yet visited, recursively, in the reversed graph
+     * @param v Pointer to initial vertex
+     * @param res Updates it with the list of visited node contents
+     */
     void dfsVisitReverse(Vertex<T> *v, std::vector<T> & res) const;
+
+    /**
+     * Auxiliary function that saves a path given a destination vertex
+     * @param v Pointer to the destination vertex
+     * @param path Path that will be updated with the path
+     */
     void savePath(Vertex<T> *v, Path &path) const;
 
 public:
@@ -166,9 +188,34 @@ public:
 	vector<Vertex<T> *> getVertexSet() const;
 	void clear();
 
+	/**
+	 * Implementation of the nearest neighbor algorithm
+	 * @param centerID id of the center
+	 * @param orders vector of orders to be delivered
+	 * @return shortes path to deliver all the orders
+	 */
     Path nearestNeighbor(int centerID, std::vector<Order> orders);
+
+    /**
+     * Algorithm that tags the vertexes that are in the same connected region as the given id
+     * @param centerID if of the node to be used
+     */
     void analyzeGraphConnectivity(int centerID);
+
+    /**
+     * Implementation of the dijkstra algorithm
+     * @param sourc id of the source node
+     * @param dest if of the destination node
+     * @return shortest path between the given nodes
+     */
     Path dijkstra(int sourc, int dest);
+
+    /**
+     * Implementation of the bidireccional dijkstra algorithm
+     * @param sourc id of the source node
+     * @param dest if of the destination node
+     * @return shortest path between the given nodes
+     */
     Path bidirectionalDijkstra(int sourc, int dest);
 
 };
@@ -235,8 +282,6 @@ Path Graph<T>::nearestNeighbor(int centerID, std::vector<Order> orders) {
 
     while (!orders.empty()) {
 
-        //std::cout << "Still has orders\n";
-
         for (Vertex<T> *v: vertexSet) {
             v->dist = INF;
             v->path = nullptr;
@@ -251,11 +296,7 @@ Path Graph<T>::nearestNeighbor(int centerID, std::vector<Order> orders) {
         while (!q.empty()) {
             Vertex<T> *temp = q.extractMin();
 
-            //std::cout << "Extracted min: " << ((Node) temp->getInfo()).getNodeId() << std::endl;
-
             if (!temp->getStrong()) continue;
-
-            //std::cout << "Is strong\n";
 
             if (temp->getInfo().getSupplier() != nullptr && supplyProducts(orders, temp->getInfo().getSupplier())) {
                 savePath(temp, path);
@@ -263,15 +304,11 @@ Path Graph<T>::nearestNeighbor(int centerID, std::vector<Order> orders) {
                 break;
             }
 
-            //std::cout << "No viable supplier\n";
-
             if (temp->getInfo().getClient() != nullptr && deliverProducts(orders, temp->getInfo().getClient())) {
                 savePath(temp, path);
                 s = temp;
                 break;
             }
-
-            //std::cout << "No viable client\n";
 
             for (Edge<T> *e: temp->outgoing) {
                 if (e->dest->dist > temp->dist + e->weight) {
@@ -283,8 +320,6 @@ Path Graph<T>::nearestNeighbor(int centerID, std::vector<Order> orders) {
                     } else q.decreaseKey(e->dest);
                 }
             }
-
-            //std::cout << "Updated values of node, and put back to queue\n";
         }
     }
 
@@ -424,11 +459,6 @@ void Graph<T>::analyzeGraphConnectivity(int centerID) {
     for (T info: res) findVertex(info)->strong = true;
 }
 
-/*
- * Performs a depth-first search (dfs) in a graph (this).
- * Returns a vector with the contents of the vertices by dfs order.
- * Follows the algorithm described in theoretical classes.
- */
 template <class T>
 std::vector<T> Graph<T>::dfs() const {
     std::vector<T> res;
@@ -439,10 +469,6 @@ std::vector<T> Graph<T>::dfs() const {
     return res;
 }
 
-/*
- * Auxiliary function that visits a vertex (v) and its adjacent not yet visited, recursively.
- * Updates a parameter with the list of visited node contents.
- */
 template <class T>
 void Graph<T>::dfsVisit(Vertex<T> *v, std::vector<T> & res) const {
     v->visited = true;

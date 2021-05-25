@@ -8,7 +8,7 @@
 - GraphViewer (./lib/GraphViewerCpp)
 - Mapas (./maps)
 
-Cada mapa deve conter ficheiros com os nós (com coordenadas xy), arestas, clientes, fornecedores, encomendas, produtos e veículos)
+Cada mapa deve conter ficheiros com os nós (com coordenadas xy), arestas, clientes, fornecedores, encomendas, produtos e veículos.
 
 ## Compilação
-A pasta do projeto corresponde a um projeto CLion desenvolvido em Windows. Para compilar é necessário abrir a pasta como um projeto no CLion e executar "Run" para compilar e executar.
+A pasta do projeto corresponde a um projeto CLion desenvolvido em Windows. Para compilar é apenas necessário abrir a pasta como um projeto no CLion e executar "Run" para compilar e executar.

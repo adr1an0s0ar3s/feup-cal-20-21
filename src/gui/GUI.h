@@ -22,21 +22,40 @@ private:
     int width;
     int height;
 
+    /**
+     * @brief Disables nodes not contained in the strong component of the graph containing the center
+     */
     void disableNotStrong();
+
+    /**
+     * @brief Enables nodes not contained in the strong component of the graph containing the center
+     */
     void enableNotStrong();
 
 public:
     GUI(const Graph<Node> *graph, int centerID, int width, int height);
 
+    /**
+     * @brief Sets the centerID
+     * @param centerID The new ID of the center
+     * @return boolean, true if successful, false otherwise
+     */
     bool setCenterID(int centerID);
 
     /**
-     * @brief Show the full graph
+     * @brief Shows the full graph
      */
     void show();
 
+    /**
+     * @brief Shows the strong component of the graph
+     */
     void showStrong();
 
+    /**
+     * @brief Shows in different colors different paths
+     * @param paths A vector containing all paths we want to draw
+     */
     void showPaths(const std::vector<Path> &paths);
 
     ~GUI();
