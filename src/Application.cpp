@@ -21,6 +21,7 @@ int Application::getCenterId() const {
 bool Application::setCenterId(int centerID) {
     if (graph.getVertexSet().size() < centerID || graph.getVertex(centerID - 1)->getInfo().getClient() != nullptr || graph.getVertex(centerID - 1)->getInfo().getSupplier() != nullptr) return false;
     this->centerID = centerID;
+    std::cout << "Analyzing graph connectivity\n";
     graph.analyzeGraphConnectivity(this->centerID);
     return true;
 }
@@ -246,41 +247,46 @@ bool Application::loadVehicles() {
 }
 
 bool Application::loadData() {
-    std::cout << "Loading data...\n\n";
+    std::cout << "Loading data...\n";
 
     graph.clear();
 
     if (!loadNodes()) {
         std::cout << "Failed to load nodes\n";
         return false;
-    }
+    } else std::cout << "Nodes loaded successfully\n";
+
     if (!loadEdges()) {
         std::cout << "Failed to load edges\n";
         return false;
-    }
+    } else std::cout << "Edges loaded successfully\n";
 
     setCenterId(1);
 
     if (!loadClients()) {
         std::cout << "Failed to load clients\n";
         return false;
-    }
+    } else std::cout << "Clients loaded successfully\n";
+
     if (!loadProducts()) {
         std::cout << "Failed to load products\n";
         return false;
-    }
+    } else std::cout << "Products loaded successfully\n";
+
     if (!loadOrders()) {
         std::cout << "Failed to load orders\n";
         return false;
-    }
+    } else std::cout << "Orders loaded successfully\n";
+
     if (!loadSuppliers()) {
         std::cout << "Failed to load suppliers\n";
         return false;
-    }
+    } else std::cout << "Suppliers loaded successfully\n";
+
     if (!loadVehicles()) {
         std::cout << "Failed to load vehicles\n";
         return false;
-    }
+    } else std::cout << "Vehicles loaded successfully\n";
 
     return true;
 }
@@ -288,7 +294,6 @@ bool Application::loadData() {
 void Application::setMap(const string &map) {
     files.map = map;
     loadData();
-    graph.analyzeGraphConnectivity(this->centerID);
 };
 
 std::vector<Order> Application::filterOrders() const {
