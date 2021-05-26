@@ -6,7 +6,13 @@
 #include "../graph/Node.h"
 #include "../graph/Path.h"
 
+#ifdef __linux__
+#include <unistd.h>
+#define Sleep(milliseconds) usleep(milliseconds*1000)
+#elif _WIN32
 #include <Windows.h>
+#endif
+
 
 using namespace std;
 
